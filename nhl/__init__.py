@@ -116,7 +116,7 @@ def fix_locale(team_locale):
     if 'NY' in team_locale:
         team_locale = 'New York'
     elif 'Montr' in team_locale:
-        team_locale = 'Montréal'
+        team_locale = 'Montreal'
     return team_locale.title()
 
 

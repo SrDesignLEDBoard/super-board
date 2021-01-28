@@ -1,3 +1,5 @@
 # matrix width and height
-WIDTH = 64
-HEIGHT = 32
+COLS = 64
+ROWS = 32
+
+GPIO_MAPPING = "adafruit-hat"

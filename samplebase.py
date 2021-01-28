@@ -2,6 +2,7 @@ import argparse
 import time
 import sys
 import os
+import config
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/..'))
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
@@ -11,13 +12,13 @@ class SampleBase(object):
     def __init__(self, *args, **kwargs):
         self.parser = argparse.ArgumentParser()
 
-        self.parser.add_argument("-r", "--led-rows", action="store", help="Display rows. 16 for 16x32, 32 for 32x32. Default: 32", default=32, type=int)
-        self.parser.add_argument("--led-cols", action="store", help="Panel columns. Typically 32 or 64. (Default: 32)", default=32, type=int)
+        # self.parser.add_argument("-r", "--led-rows", action="store", help="Display rows. 16 for 16x32, 32 for 32x32. Default: 32", default=config.ROWS, type=int)
+        # self.parser.add_argument("--led-cols", action="store", help="Panel columns. Typically 32 or 64. (Default: 32)", default=config.COLS, type=int)
         self.parser.add_argument("-c", "--led-chain", action="store", help="Daisy-chained boards. Default: 1.", default=1, type=int)
         self.parser.add_argument("-P", "--led-parallel", action="store", help="For Plus-models or RPi2: parallel chains. 1..3. Default: 1", default=1, type=int)
         self.parser.add_argument("-p", "--led-pwm-bits", action="store", help="Bits used for PWM. Something between 1..11. Default: 11", default=11, type=int)
         self.parser.add_argument("-b", "--led-brightness", action="store", help="Sets brightness level. Default: 100. Range: 1..100", default=100, type=int)
-        self.parser.add_argument("-m", "--led-gpio-mapping", help="Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm" , choices=['regular', 'adafruit-hat', 'adafruit-hat-pwm'], type=str)
+        # self.parser.add_argument("-m", "--led-gpio-mapping", help="Hardware Mapping: regular, adafruit-hat, adafruit-hat-pwm" , default=config.GPIO_MAPPING, choices=['regular', 'adafruit-hat', 'adafruit-hat-pwm'], type=str)
         self.parser.add_argument("--led-scan-mode", action="store", help="Progressive or interlaced scan. 0 Progressive, 1 Interlaced (default)", default=1, choices=range(2), type=int)
         self.parser.add_argument("--led-pwm-lsb-nanoseconds", action="store", help="Base time-unit for the on-time in the lowest significant bit in nanoseconds. Default: 130", default=130, type=int)
         self.parser.add_argument("--led-show-refresh", action="store_true", help="Shows the current refresh rate of the LED panel")
@@ -40,10 +41,11 @@ class SampleBase(object):
 
         options = RGBMatrixOptions()
 
-        if self.args.led_gpio_mapping != None:
-          options.hardware_mapping = self.args.led_gpio_mapping
-        options.rows = self.args.led_rows
-        options.cols = self.args.led_cols
+        # if self.args.led_gpio_mapping != None:
+        #   options.hardware_mapping = self.args.led_gpio_mapping
+        options.hardware_mapping = config.GPIO_MAPPING
+        options.rows = config.ROWS
+        options.cols = config.COLS
         options.chain_length = self.args.led_chain
         options.parallel = self.args.led_parallel
         options.row_address_type = self.args.led_row_addr_type
