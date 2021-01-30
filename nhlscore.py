@@ -15,14 +15,12 @@ def getNHLScore():
         for game in games:
                 if not game.is_favorite_match(config.NHL_FAVS): continue
 
-                game_summary = ""
+                game_summary = None
 
                 if game.game_stage != '':
-                    game_summary += game.get_scoreline(config.COLS) + "\n" \
-                        + game.get_clock(config.COLS)
+                    game_summary = (game.get_scoreline(config.COLS), game.get_clock(config.COLS))
                 else:
-                    game_summary += game.get_matchup(config.COLS) + "\n" \
-                        + game.get_clock(config.COLS)
+                    game_summary = (game.get_matchup(config.COLS), game.get_clock(config.COLS))
                 
                 gs.append(game_summary)
         return gs

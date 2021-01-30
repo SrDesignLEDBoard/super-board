@@ -15,22 +15,20 @@ class RunText(SampleBase):
     def run(self):
         offscreen_canvas = self.matrix.CreateFrameCanvas()
         font = graphics.Font()
-        font.LoadFont("./fonts/7x13.bdf")
+        font.LoadFont("./fonts/4x6.bdf")
         textColor = graphics.Color(255, 255, 0)
-        pos = 0
-        game = ""
+        pos = 1
 
         while True:
             games = nhlscore.getNHLScore()
             for game in games:
+                matchup, game_time = game
                 offscreen_canvas.Clear()
-                graphics.DrawText(offscreen_canvas, font, pos, 10, textColor, game)
-                time.sleep(config.SCROLL)
-
-            if config.INTERVAL - config.SCROLL * len(games) > 0:
+                graphics.DrawText(offscreen_canvas, font, int((config.COLS - (len(matchup)*4 - 1)) / 2), 13, textColor, matchup)
+                graphics.DrawText(offscreen_canvas, font, int((config.COLS - (len(game_time)*4 - 1)) / 2), 24, textColor, game_time)
+                print(offscreen_canvas.height)
                 time.sleep(config.INTERVAL)
-            offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
-
+                offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
 # Main function
 if __name__ == "__main__":
