@@ -4,6 +4,7 @@ from samplebase import SampleBase
 from rgbmatrix import graphics
 import nhlscore
 import time
+import config
 
 
 class RunText(SampleBase):
@@ -16,18 +17,18 @@ class RunText(SampleBase):
         font = graphics.Font()
         font.LoadFont("./fonts/7x13.bdf")
         textColor = graphics.Color(255, 255, 0)
-        pos = offscreen_canvas.width
-        # takes the first match given
-        my_text = nhlscore.getNHLScore()[0]
+        pos = 0
+        game = ""
 
         while True:
-            offscreen_canvas.Clear()
-            len = graphics.DrawText(offscreen_canvas, font, pos, 10, textColor, my_text)
-            pos -= 1
-            if (pos + len < 0):
-                pos = offscreen_canvas.width
+            games = nhlscore.getNHLScore()
+            for game in games:
+                offscreen_canvas.Clear()
+                graphics.DrawText(offscreen_canvas, font, pos, 10, textColor, game)
+                time.sleep(config.SCROLL)
 
-            time.sleep(0.05)
+            if config.INTERVAL - config.SCROLL * len(games) > 0:
+                time.sleep(config.INTERVAL)
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
 

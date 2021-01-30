@@ -17,13 +17,13 @@ def getNHLScore():
 
                 game_summary = ""
 
-                game_summary += game.get_matchup(config.COLS) + " " + \
-                    game.get_clock(config.COLS)
-
                 if game.game_stage != '':
-                    game_summary += ' ' + game.get_scoreline(config.COLS)
-                # print(game_summary)
-                # RunText.run(game_summary)
+                    game_summary += game.get_scoreline(config.COLS) + "\n" \
+                        + game.get_clock(config.COLS)
+                else:
+                    game_summary += game.get_matchup(config.COLS) + "\n" \
+                        + game.get_clock(config.COLS)
+                
                 gs.append(game_summary)
         return gs
     except Exception as e:
@@ -31,3 +31,5 @@ def getNHLScore():
 
 if __name__ == "__main__":
     print(getNHLScore())
+    # for i in getNHLScore():
+    #     print(i)
