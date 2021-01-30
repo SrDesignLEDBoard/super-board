@@ -3,3 +3,5 @@ COLS = 64
 ROWS = 32
 
 GPIO_MAPPING = "adafruit-hat"
+
+NHL_FAVS= ['PIT', 'BUF']

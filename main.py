@@ -17,7 +17,8 @@ class RunText(SampleBase):
         font.LoadFont("./fonts/7x13.bdf")
         textColor = graphics.Color(255, 255, 0)
         pos = offscreen_canvas.width
-        my_text = nhlscore.getNHLScore()
+        # takes the first match given
+        my_text = nhlscore.getNHLScore()[0]
 
         while True:
             offscreen_canvas.Clear()

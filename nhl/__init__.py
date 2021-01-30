@@ -2,6 +2,8 @@ import datetime
 import json
 import requests
 
+from nhl.teams import abbreviations
+
 class Game:
     """Game represents a scheduled NHL game"""
     def __init__(self, game_info):
@@ -11,11 +13,11 @@ class Game:
         self.game_stage  = game_info['tsc']
         self.game_status = game_info['bs']
         self.away_locale = fix_locale(game_info['atn'])
-        self.away_name   = fix_name(game_info['atv'])
+        self.away_name   = abbreviations[fix_name(game_info['atv'])]
         self.away_score  = game_info['ats']
         self.away_result = game_info['atc']
         self.home_locale = fix_locale(game_info['htn'])
-        self.home_name   = fix_name(game_info['htv'])
+        self.home_name   = abbreviations[fix_name(game_info['htv'])]
         self.home_score  = game_info['hts']
         self.home_result = game_info['htc']
 
@@ -31,16 +33,19 @@ class Game:
 
     def get_scoreline(self, width):
         """Get current score in butterfly format"""
-        score = self.away_name + ' ' + self.away_score + \
-            " - " + self.home_score + ' ' + self.home_name
-        return score.center(width)
+        # score = self.away_name + ' ' + self.away_score + \
+        #     " - " + self.home_score + ' ' + self.home_name
+        # return score.center(width)
+        score = f"{self.away_name} {self.away_score} - {self.home_name} {self.home_score}"
+        return score
 
 
     def get_matchup(self, width):
         """Get full names of both teams"""
-        matchup = self.away_locale + ' ' + self.away_name + \
-            ' @ ' + self.home_locale + ' ' + self.home_name
+        # matchup = self.away_locale + ' ' + self.away_name + \
+        #     ' @ ' + self.home_locale + ' ' + self.home_name
         # return matchup.center(width)
+        matchup = f"{self.away_name} @ {self.home_name}"
         return matchup
 
 
@@ -89,6 +94,12 @@ class Game:
             return True
         else:
             return False
+
+    def is_favorite_match(self, favorites):
+        for team in favorites:
+            if team == self.home_name or team == self.away_name:
+                return True
+        return False
 
 def get_date(delta):
     """Build a date object with given day offset"""
