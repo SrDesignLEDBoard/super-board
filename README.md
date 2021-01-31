@@ -1,5 +1,9 @@
 # LEDScoreboard
 
+## About the files
+- `main.py` displays logos along with the score (have to fix the timing for NHL)
+- `text.py` simply displays text
+
 ## Running the code
 Since we only have a single hardware device, make a file like `tmp.py` to check your results. For example:
 ```py

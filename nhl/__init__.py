@@ -36,10 +36,13 @@ class Game:
         else:
             self.playoffs = False
 
-    def get_scoreline(self, width: int):
-        """Get current score in 'ABC n - m XYZ' format"""
-        score = f"{self.away_name} {self.away_score}" + \
-            " - " + f"{self.home_score} {self.home_name}"
+    def get_scoreline(self, width: int) -> Dict[str, str]:
+        """Get current score in a dict with team names and score"""
+        score = {
+            "home": self.home_name,
+            "away": self.away_name,
+            "score": f"{self.away_score} - {self.home_score}"
+        }
         return score
 
     def get_matchup(self, width: int) -> str:
