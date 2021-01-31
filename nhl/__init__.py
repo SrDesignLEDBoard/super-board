@@ -1,81 +1,78 @@
-import datetime
-import json
-import requests
+# import datetime
+# import json
+# import requests
+import utils
+import config
+import constants
+from typing import List, Tuple, Dict
 
 from nhl.teams import abbreviations
+import nhl.fixes as fixes
+
 
 class Game:
     """Game represents a scheduled NHL game"""
-    def __init__(self, game_info):
+    def __init__(self, game_info: Dict[str, any]):
         """Parse JSON to attributes"""
-        self.game_id     = str(game_info['id'])
-        self.game_clock  = game_info['ts']
-        self.game_stage  = game_info['tsc']
+        self.game_id = str(game_info['id'])
+        self.game_clock = game_info['ts']
+        self.game_stage = game_info['tsc']
         self.game_status = game_info['bs']
-        self.away_locale = fix_locale(game_info['atn'])
-        self.away_name   = abbreviations[fix_name(game_info['atv'])]
-        self.away_score  = game_info['ats']
+        self.away_locale = fixes.fix_locale(game_info['atn'])
+        self.away_name = abbreviations[fixes.fix_name(game_info['atv'])]
+        self.away_score = game_info['ats']
         self.away_result = game_info['atc']
-        self.home_locale = fix_locale(game_info['htn'])
-        self.home_name   = abbreviations[fix_name(game_info['htv'])]
-        self.home_score  = game_info['hts']
+        self.home_locale = fixes.fix_locale(game_info['htn'])
+        self.home_name = abbreviations[fixes.fix_name(game_info['htv'])]
+        self.home_score = game_info['hts']
         self.home_result = game_info['htc']
 
         # Playoff-specific game information
         if '03' in self.game_id[4:6]:
-            self.playoffs            = True
-            self.playoff_round       = self.game_id[6:8]
-            self.playoff_series_id   = self.game_id[8:9]
+            self.playoffs = True
+            self.playoff_round = self.game_id[6:8]
+            self.playoff_series_id = self.game_id[8:9]
             self.playoff_series_game = self.game_id[9]
         else:
             self.playoffs = False
 
-
-    def get_scoreline(self, width):
-        """Get current score in butterfly format"""
-        # score = self.away_name + ' ' + self.away_score + \
-        #     " - " + self.home_score + ' ' + self.home_name
-        # return score.center(width)
-        score = f"{self.away_name} {self.away_score} - {self.home_name} {self.home_score}"
+    def get_scoreline(self, width: int):
+        """Get current score in 'ABC n - m XYZ' format"""
+        score = f"{self.away_name} {self.away_score}" + \
+            " - " + f"{self.home_score} {self.home_name}"
         return score
 
-
-    def get_matchup(self, width):
+    def get_matchup(self, width: int) -> str:
         """Get full names of both teams"""
-        # matchup = self.away_locale + ' ' + self.away_name + \
-        #     ' @ ' + self.home_locale + ' ' + self.home_name
-        # return matchup.center(width)
         matchup = f"{self.away_name} @ {self.home_name}"
         return matchup
 
-
-    def get_playoff_info(self, width):
+    def get_playoff_info(self, width: int) -> str:
         """Get title of playoff series"""
-        playoff_info = playoff_series_info(self.playoff_round, self.playoff_series_id)
+        playoff_info = fixes.playoff_series_info(self.playoff_round,
+                                                 self.playoff_series_id)
         playoff_info += ' -- GAME ' + self.playoff_series_game
         return playoff_info.center(width)
 
-
-    def get_clock(self, width):
+    def get_clock(self, width: int) -> str:
         """Get game clock and status"""
         clock = self.game_clock + ' (' + self.game_status + ')'
         # return clock.center(width)
         return clock
 
-
-    def is_scheduled_for(self, date):
+    def is_scheduled_for(self, date: str) -> bool:
         """True if this game is scheduled for the given date"""
         if date.upper() in self.game_clock:
             return True
         else:
             return False
 
-    def normalize_today(self):
-        date = get_date(0)
+    def normalize_today(self) -> bool:
+        date = utils.get_date(0)
 
         # must be today
         if date.upper() in self.game_clock or \
-            'TODAY' in self.game_clock:
+                'TODAY' in self.game_clock:
             self.game_clock = 'TODAY'
             return True
         # or must be pre-game
@@ -87,87 +84,50 @@ class Game:
             return True
         return False
 
-
-    def is_scheduled_for_today(self):
+    def is_scheduled_for_today(self) -> bool:
         """True if this game is scheduled for today"""
         if self.normalize_today():
             return True
         else:
             return False
 
-    def is_favorite_match(self, favorites):
+    def is_favorite_match(self, favorites: List[str]) -> bool:
+        """True if game has a team favorited by the user."""
         for team in favorites:
             if team == self.home_name or team == self.away_name:
                 return True
         return False
 
-def get_date(delta):
-    """Build a date object with given day offset"""
-    date = datetime.datetime.now()
-    if delta is not None:
-        offset = datetime.timedelta(days=delta)
-        date = date + offset
-    date = date.strftime("%A %-m/%-d")
-    return date
 
+class Scores:
+    @staticmethod
+    def get_scores() -> List[Tuple[str, str]]:
+        """Get a list of scores/games that are on-going
+                or planned for the day (in that order)"""
+        try:
+            data = utils.get_JSON(constants.NHL_API)
+            games = []
 
-def get_JSON(URL):
-    "Request JSON from API server"
-    response = requests.get(URL)
-    # the live.nhle.com/ API has a wrapper, so remove it
-    if 'nhle' in URL:
-        response = response.text.replace('loadScoreboard(', '')
-        response = response.replace(')', '')
-    response = json.loads(response)
-    return response
+            for game_info in data['games']:
+                game = Game(game_info)
+                if game.is_scheduled_for_today():
+                    games.append(game)
 
+            gs = []
+            for game in games:
+                if not game.is_favorite_match(config.NHL_FAVS):
+                    continue
 
-def fix_locale(team_locale):
-    """Expand and fix place names from the values in JSON"""
-    if 'NY' in team_locale:
-        team_locale = 'New York'
-    elif 'Montr' in team_locale:
-        team_locale = 'Montreal'
-    return team_locale.title()
+                game_summary = None
 
+                if game.game_stage != '':
+                    game_summary = (game.get_scoreline(config.COLS),
+                                    game.get_clock(config.COLS))
+                else:
+                    game_summary = (game.get_matchup(config.COLS),
+                                    game.get_clock(config.COLS))
 
-def fix_name(team_name):
-    """Expand team names from the values in JSON"""
-    if 'wings' in team_name:
-        team_name = 'Red Wings'
-    elif 'jackets' in team_name:
-        team_name = 'Blue Jackets'
-    elif 'leafs' in team_name:
-        team_name = 'Maple Leafs'
-    elif 'knights' in team_name:
-        team_name = 'Golden Knights'
-    return team_name.title()
-
-def playoff_series_info(rnd, srs):
-    """Get the title of current round/series"""
-    title = {
-        "01": {
-            "1": "First Round: East #1 vs. Wildcard #2",
-            "2": "First Round: Atlantic #2 vs. Atlantic #3",
-            "3": "First Round: East #2 vs. Wildcard #1",
-            "4": "First Round: Metropolitan #2 vs. Metropolitan #2",
-            "5": "First Round: West #1 vs. Wildcard #2",
-            "6": "First Round: Central #2 vs. Central #3",
-            "7": "First Round: West #2 vs. Wildcard #1",
-            "8": "First Round: Pacific #2 vs. Pacific #3",
-        },
-        "02": {
-            "1": "Eastern Conference Semifinals",
-            "2": "Eastern Conference Semifinals",
-            "3": "Western Conference Semifinals",
-            "4": "Western Conference Semifinals",
-        },
-        "03": {
-            "1": "Eastern Conference Finals",
-            "2": "Western Conference Finals",
-        },
-        "04": {
-            "1": "Stanley Cup Final"
-        }
-    }
-    return title[rnd][srs]
+                gs.append(game_summary)
+            return gs
+        except Exception as e:
+            return print(e)

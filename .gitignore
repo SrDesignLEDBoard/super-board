@@ -4,3 +4,4 @@ venv
 tmp.py
 *__pycache__/
 *.pyc
+tmp.py
