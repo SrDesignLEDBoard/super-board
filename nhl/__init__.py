@@ -1,136 +1,102 @@
-# import datetime
-# import json
-# import requests
-import utils
-import config
-import constants
-from typing import List, Tuple, Dict
+import time
+import sys
 
-from nhl.teams import abbreviations
-import nhl.fixes as fixes
+from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+from PIL import Image, ImageOps
+
+from .game import Scores
+from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 
 
-class Game:
-    """Game represents a scheduled NHL game"""
-    def __init__(self, game_info: Dict[str, any]):
-        """Parse JSON to attributes"""
-        self.game_id = str(game_info['id'])
-        self.game_clock = game_info['ts']
-        self.game_stage = game_info['tsc']
-        self.game_status = game_info['bs']
-        self.away_locale = fixes.fix_locale(game_info['atn'])
-        self.away_name = abbreviations[fixes.fix_name(game_info['atv'])]
-        self.away_score = game_info['ats']
-        self.away_result = game_info['atc']
-        self.home_locale = fixes.fix_locale(game_info['htn'])
-        self.home_name = abbreviations[fixes.fix_name(game_info['htv'])]
-        self.home_score = game_info['hts']
-        self.home_result = game_info['htc']
+def draw_board():
+    """Render board for NHL"""
 
-        # Playoff-specific game information
-        if '03' in self.game_id[4:6]:
-            self.playoffs = True
-            self.playoff_round = self.game_id[6:8]
-            self.playoff_series_id = self.game_id[8:9]
-            self.playoff_series_game = self.game_id[9]
-        else:
-            self.playoffs = False
+    # Configuration for the matrix
+    options = RGBMatrixOptions()
+    options.rows = ROWS
+    options.cols = COLS
+    options.chain_length = 1
+    options.parallel = 1
+    options.brightness = BRIGHTNESS
+    options.hardware_mapping = 'adafruit-hat'
 
-    def get_scoreline(self, width: int) -> Dict[str, str]:
-        """Get current score in a dict with team names and score"""
-        score = {
-            "home": self.home_name,
-            "away": self.away_name,
-            "score": f"{self.away_score} - {self.home_score}"
-        }
-        return score
+    image_size = ROWS if ROWS < COLS else COLS
+    matrix = RGBMatrix(options=options)
 
-    def get_matchup(self, width: int) -> str:
-        """Get full names of both teams"""
-        matchup = f"{self.away_name} @ {self.home_name}"
-        return matchup
+    canvas = matrix.CreateFrameCanvas()
+    font = graphics.Font()
+    font.LoadFont("./fonts/tom-thumb.bdf")
+    textColor = graphics.Color(255, 255, 255)
 
-    def get_playoff_info(self, width: int) -> str:
-        """Get title of playoff series"""
-        playoff_info = fixes.playoff_series_info(self.playoff_round,
-                                                 self.playoff_series_id)
-        playoff_info += ' -- GAME ' + self.playoff_series_game
-        return playoff_info.center(width)
+    height_first_row = 9
+    height_second_row = 18
+    height_third_row = 27
+    score_len = 20
 
-    def get_clock(self, width: int) -> str:
-        """Get game clock and status"""
-        clock = self.game_clock + ' (' + self.game_status + ')'
-        # return clock.center(width)
-        return clock
+    while True:
+        games = Scores.get_scores()
 
-    def is_scheduled_for(self, date: str) -> bool:
-        """True if this game is scheduled for the given date"""
-        if date.upper() in self.game_clock:
-            return True
-        else:
-            return False
+        # TODO handle no games; Will be done after all leagues \
+        # are done or at last one more
+        if len(games) == 0:
+            return -1
 
-    def normalize_today(self) -> bool:
-        date = utils.get_date(0)
+        for game in games:
+            canvas.Clear()
 
-        # must be today
-        if date.upper() in self.game_clock or \
-                'TODAY' in self.game_clock:
-            self.game_clock = 'TODAY'
-            return True
-        # or must be pre-game
-        elif 'PRE GAME' in self.game_clock:
-            self.game_clock = 'PRE-GAME'
-            return True
-        # or game must be live
-        elif 'LIVE' in self.game_status:
-            return True
-        return False
+            if game['stage'] != '':
+                # Print score final or live
+                score_len = len(game['score'])*4
+                graphics.DrawText(canvas, font,
+                                  int((COLS - score_len) / 2),
+                                  height_second_row, textColor, game['score'])
+                if game['stage'] == 'progress':
+                    # If game is in progress, print period \
+                    # and time left in the period
+                    period_len = len(game['period'])*4
+                    time_len = len(game['time'])*4
+                    graphics.DrawText(canvas, font,
+                                      int((COLS - period_len) / 2),
+                                      height_first_row, textColor,
+                                      game['period'])
+                    graphics.DrawText(canvas, font,
+                                      int((COLS - time_len) / 2),
+                                      height_third_row, textColor,
+                                      game['time'])
+                elif game['stage'] == 'final':
+                    # Else print 'fin' to indicate final score
+                    graphics.DrawText(canvas, font,
+                                      int((COLS - 12) / 2),
+                                      height_first_row, textColor, "fin")
+            else:
+                # If planned game, print @ and time
+                status_len = len(game['status'])*4
+                graphics.DrawText(canvas, font,
+                                  int((COLS - 4) / 2),
+                                  height_first_row, textColor, "@")
+                graphics.DrawText(canvas, font,
+                                  int((COLS - status_len) / 2),
+                                  height_second_row, textColor, game['status'])
 
-    def is_scheduled_for_today(self) -> bool:
-        """True if this game is scheduled for today"""
-        if self.normalize_today():
-            return True
-        else:
-            return False
+            # Get x coords for logos
+            image_space = (COLS - score_len - 4) / 2
+            x_away = -ROWS + image_space
+            x_away = x_away if game['stage'] != '' else x_away-5
+            x_home = image_space + score_len + 4
+            x_home = x_home if game['stage'] != '' else x_home+5
 
-    def is_favorite_match(self, favorites: List[str]) -> bool:
-        """True if game has a team favorited by the user."""
-        for team in favorites:
-            if team == self.home_name or team == self.away_name:
-                return True
-        return False
+            # Get logos as thumbnails; home is flipped for right
+            image_away = Image.open(f"logos/NHL/{game['away']}_logo.png")
+            image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
+            image_home = Image.open(f"logos/NHL/{game['home']}_logo.png")
+            image_home = ImageOps.mirror(image_home)
+            image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-class Scores:
-    @staticmethod
-    def get_scores() -> List[Tuple[str, str]]:
-        """Get a list of scores/games that are on-going
-                or planned for the day (in that order)"""
-        try:
-            data = utils.get_JSON(constants.NHL_API)
-            games = []
+            # Print logos
+            canvas.SetImage(image_away.convert('RGB'), x_away, 0)
+            canvas.SetImage(image_home.convert('RGB'),
+                            x_home, 0)
 
-            for game_info in data['games']:
-                game = Game(game_info)
-                if game.is_scheduled_for_today():
-                    games.append(game)
-
-            gs = []
-            for game in games:
-                if not game.is_favorite_match(config.NHL_FAVS):
-                    continue
-
-                game_summary = None
-
-                if game.game_stage != '':
-                    game_summary = (game.get_scoreline(config.COLS),
-                                    game.get_clock(config.COLS))
-                else:
-                    game_summary = (game.get_matchup(config.COLS),
-                                    game.get_clock(config.COLS))
-
-                gs.append(game_summary)
-            return gs
-        except Exception as e:
-            return print(e)
+            time.sleep(INTERVAL)
+            canvas = matrix.SwapOnVSync(canvas)

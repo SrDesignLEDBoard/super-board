@@ -23,6 +23,8 @@ class RunText(SampleBase):
         textColor = graphics.Color(255, 255, 255)
 
         while True:
+            # Will not run. Have to modify the import
+            # I remodled the nhl before merging into main
             games = nhl.Scores.get_scores()
             for game in games:
                 matchup, game_time = game
