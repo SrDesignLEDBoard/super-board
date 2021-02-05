@@ -1,16 +1,34 @@
 # LEDScoreboard
 
-## Installing virtual environment (only for testing)
-```
-virtualenv -p python2 venv
+## About the files
+- `main.py` displays logos along with the score (have to fix the timing for NHL)
+- `text.py` simply displays text
+
+## Running the code
+Since we only have a single hardware device, make a file like `tmp.py` to check your results. For example:
+```py
+# tmp.py for nhl
+import nhl
+
+print(nhl.Scores.get_scores())
 ```
 
-I'm using `python2` for the example script since `python3.9` is giving some problems
-
-## Installing required libraries library
-<https://github.com/hzeller/rpi-rgb-led-matrix/tree/master/bindings/python>
-
-## Running the example script
+Sample output
 ```
-python test-image.py howchoo-low-res-g.png
+[('PIT 2 - NYR 1', '13:28 2nd (LIVE)'), ('NJD 3 - BUF 4', 'TODAY (FINAL SO)')]
 ```
+
+## Check PEP8 conventions
+They are pretty simple and standard. Just for consistency in code from 6 people
+
+Make executable
+```bash
+chmod +x check_pep8.sh
+```
+
+Run to check code
+```bash
+./check_pep8.sh
+```
+
+Commit only if it returns no output. And, add folders to the command in `check_pep8.py` if you create any packages.

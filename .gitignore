@@ -1,2 +1,7 @@
 rpi-rgb-led-matrix
 venv
+.vscode/
+tmp.py
+*__pycache__/
+*.pyc
+tmp.py
