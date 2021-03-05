@@ -3,7 +3,7 @@ backports.functools-lru-cache==1.6.1
 configparser==4.0.2
 enum34==1.1.10
 futures==3.3.0
-isort==4.3.21
+isort==5.7.0
 lazy-object-proxy==1.5.2
 mccabe==0.6.1
 Pillow==6.2.2
