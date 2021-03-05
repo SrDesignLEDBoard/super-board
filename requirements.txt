@@ -1,6 +1,6 @@
 astroid==2.5.1
 backports.functools-lru-cache==1.6.1
-configparser==4.0.2
+configparser==5.0.2
 enum34==1.1.10
 futures==3.3.0
 isort==5.7.0
