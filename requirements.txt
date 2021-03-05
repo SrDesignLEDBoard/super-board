@@ -7,7 +7,7 @@ isort==5.7.0
 lazy-object-proxy==1.5.2
 mccabe==0.6.1
 Pillow==6.2.2
-pylint==1.9.5
+pylint==2.7.2
 rgbmatrix==0.0.1
 singledispatch==3.4.0.3
 six==1.15.0
