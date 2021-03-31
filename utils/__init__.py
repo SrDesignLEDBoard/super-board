@@ -20,5 +20,8 @@ def get_JSON(URL):
     if 'nhle' in URL:
         response = response.text.replace('loadScoreboard(', '')
         response = response.replace(')', '')
-    response = json.loads(response)
+    if 'mlb' in URL:
+        response = json.loads(response.text)
+    else:
+        response = json.loads(response)
     return response

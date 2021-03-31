@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pycodestyle config.py  constants.py  main.py utils/ nhl/
+pycodestyle config.py  constants.py  main.py utils/ mlb/ nhl/
