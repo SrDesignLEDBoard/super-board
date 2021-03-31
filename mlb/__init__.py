@@ -1,8 +1,7 @@
-
 import time
 import sys
 
-#from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from PIL import Image, ImageOps
 
 from .game import Scores
