@@ -10,3 +10,4 @@ SCROLL = 5
 
 MLB_FAVS = ['TB', 'TEX']
 NHL_FAVS = ['PIT', 'BUF']
+LALIGA_FAVS = ['BAR','HUE']
