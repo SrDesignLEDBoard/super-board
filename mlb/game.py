@@ -26,8 +26,8 @@ class Game:
             self.away_score = str(game_info['teams']['away']['score'])
             self.home_score = str(game_info['teams']['home']['score']) 
         else :
-            self.away_score = '0'
-            self.home_score = '0'
+            self.away_score = ''
+            self.home_score = ''
 
         #self.away_name = liveData['gameData']['teams']['away']['abbreviation']
         #self.home_name = liveData['gameData']['teams']['home']['abbreviation']
@@ -38,7 +38,8 @@ class Game:
         if 'currentInningOrdinal' in liveData['liveData']['linescore'] :
             self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal']
         else :
-            self.game_clock = "0"
+            self.game_clock = '@ ' + liveData['gameData']['datetime']['time'] + \
+                              liveData['gameData']['datetime']['ampm'] + ' EST'
 
         """Top Inning variable only available when the game starts"""
         if 'isTopInning' in liveData['liveData']['linescore']:
@@ -47,8 +48,8 @@ class Game:
             self.outs = liveData['liveData']['linescore']['outs']
         else:
             self.top_inning = 'false'
-            self.strikes = '0'
-            self.outs = '0'
+            self.strikes = ''
+            self.outs = ''
 
     def get_scoreline(self, width: int) -> Dict[str, str]:
         """Get current score in a dict with team names and score"""
