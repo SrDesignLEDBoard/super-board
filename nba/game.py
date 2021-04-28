@@ -16,7 +16,7 @@ class Game:
         self.game_period = game_info['period']['current']
         self.game_status = game_info['isGameActivated']
 
-        self.start_date = game_info['startDateEastern']
+        self.start_date = game_info['startDateEastern'][:-3]
 
         self.away_name = game_info['vTeam']['triCode']
         self.away_score = game_info['vTeam']['score']
