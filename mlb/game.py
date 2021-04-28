@@ -38,7 +38,7 @@ class Game:
         if 'currentInningOrdinal' in liveData['liveData']['linescore'] :
             self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal']
         else :
-            self.game_clock = '@ ' + liveData['gameData']['datetime']['time'] + \
+            self.game_clock = liveData['gameData']['datetime']['time'] + \
                               liveData['gameData']['datetime']['ampm'] + ' EST'
 
         """Top Inning variable only available when the game starts"""
