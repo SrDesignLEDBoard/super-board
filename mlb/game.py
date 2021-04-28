@@ -15,7 +15,7 @@ class Game:
         """Parse JSON to attributes"""
         self.game_id = str(game_info['gamePk'])
 
-        """Possible States: Scheduled, Pre-Game, Warmup, Current, Final"""
+        """Possible States: Scheduled, Pre-Game, Warmup, In Progress, Final"""
         self.game_stage = game_info['status']['detailedState']
 
         """Capitalize the status of the game so its easier to be displayed"""
@@ -34,15 +34,22 @@ class Game:
         self.away_name = a_name
         self.home_name = h_name
 
+        """Inning information only available when the game starts"""
         if 'currentInningOrdinal' in liveData['liveData']['linescore'] :
             self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal'] + ' Inning'
         else :
             self.game_clock = ('TODAY @ ' + liveData['gameData']['datetime']['time'] +
                                ' '  + liveData['gameData']['datetime']['ampm'])
 
-        self.top_inning = liveData['liveData']['linescore']['isTopInning']
-        self.strikes = liveData['liveData']['linescore']['strikes']
-        self.outs = liveData['liveData']['linescore']['outs']
+        """Top Inning variable only available when the game starts"""
+        if 'isTopInning' in liveData['liveData']['linescore'] 
+            self.top_inning = liveData['liveData']['linescore']['isTopInning']
+            self.strikes = liveData['liveData']['linescore']['strikes']
+            self.outs = liveData['liveData']['linescore']['outs']
+        else
+            self.top_inning = false
+            self.strikes = '0'
+            self.outs = '0'
 
     def get_scoreline(self, width: int) -> Dict[str, str]:
         """Get current score in a dict with team names and score"""
