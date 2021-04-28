@@ -15,7 +15,7 @@ class Game:
         """Parse JSON to attributes"""
         self.game_id = str(game_info['gamePk'])
 
-        """Possible States: Pre-Game, Scheduled, Current, Final"""
+        """Possible States: Scheduled, Pre-Game, Warmup, Current, Final"""
         self.game_stage = game_info['status']['detailedState']
 
         """Capitalize the status of the game so its easier to be displayed"""

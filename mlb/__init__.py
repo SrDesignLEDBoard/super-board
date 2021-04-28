@@ -86,10 +86,10 @@ def draw_board():
             x_home = x_home if game['stage'] != '' else x_home+5
 
             # Get logos as thumbnails; home is flipped for right
-            image_away = Image.open(f"logos/NHL/{game['away']}_logo.png")
+            image_away = Image.open(f"logos/MLB/{game['away']}_logo.png")
             image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-            image_home = Image.open(f"logos/NHL/{game['home']}_logo.png")
+            image_home = Image.open(f"logos/MLB/{game['home']}_logo.png")
             image_home = ImageOps.mirror(image_home)
             image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
