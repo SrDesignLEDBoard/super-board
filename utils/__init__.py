@@ -1,6 +1,10 @@
 import datetime
 import requests
-import json
+
+try:
+    import ujson as json
+except ImportError:
+    import json
 
 
 def get_date(delta: int):

@@ -42,11 +42,10 @@ def draw_board():
     button = Button(25)
 
     it = 0
+    wait = 0
 
     while it < len(games):
         canvas.Clear()
-
-        print(f"Printing game {games[it]['away']} vs {games[it]['home']}")
 
         if games[it]['stage'] != '':
             # Print score final or live
@@ -103,24 +102,24 @@ def draw_board():
                         x_home, 0)
 
         # Handle control button and wait
-        print("Waiting for press")
         is_button_pressed = button.wait_for_press(5)
-        print("End wait")
-        tmp = Scores.get_scores()
 
         # Increment iterator if button was pressed
         if is_button_pressed:
             it += 1
-            print(f"Going next game {games[it]['away']} vs {games[it]['home']}")
-        else:
-            print(f"Continuing game {games[it]['away']} vs {games[it]['home']}")
+            time.sleep(2)
 
-        # Check if new fixes
-        if games[it]['away'] != games[it]['away'] and \
-            tmp[it]['home'] != tmp[it]['home']:
-            it = 0
-        games = tmp
+        # Mention to the user that they should wait after pressing the button
+        # for about 5-10 seconds as it takes a while to fetch score
+        wait += 1
+        if wait > 12:
+            wait = 0
+            tmp = Scores.get_scores()
 
-        print("End of loop\n")
+            # Check if new fixes
+            if games[it]['away'] != games[it]['away'] and \
+                tmp[it]['home'] != tmp[it]['home']:
+                it = 0
+            games = tmp
 
         canvas = matrix.SwapOnVSync(canvas)
