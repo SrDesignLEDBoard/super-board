@@ -71,6 +71,9 @@ def draw_board():
             graphics.DrawText(canvas, font,
                                 int((COLS - 4) / 2),
                                 height_first_row, textColor, "@")
+            graphics.DrawText(canvas, font,
+                                int((COLS - status_len) / 2),
+                                height_second_row, textColor, games[it]['startdate'])
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2

@@ -50,7 +50,8 @@ class Game:
             "away": self.away_name,
             "period": self.game_period,
             "status": self.game_status,
-            "clock": self.game_clock
+            "clock": self.game_clock,
+            "starttime": self.start_date
         }
         if self.game_period:
             if self.away_score == '' and self.home_score == '':
@@ -58,9 +59,9 @@ class Game:
             else:
                 matchup["score"] = f"{self.away_score} - {self.home_score}"
 
-        if self.game_period != 0 and self.game_status :
-            tmp = self.game_clock.split(' ')
-            matchup["time"], matchup["period"] = tmp[0], tmp[1]
+        # if self.game_period != 0 and self.game_status :
+        #     tmp = self.game_clock.split(' ')
+        #     matchup["time"], matchup["period"] = tmp[0], tmp[1]
         return matchup
 
     def get_clock(self, width: int) -> str:
