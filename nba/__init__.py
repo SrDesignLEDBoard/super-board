@@ -12,10 +12,6 @@ from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 def draw_board():
     """Render board for NBA"""
 
-    games = Scores.get_scores()
-    if len(games) == 0:
-        return -1
-
     # Configuration for the matrix
     options = RGBMatrixOptions()
     options.rows = ROWS
@@ -43,6 +39,17 @@ def draw_board():
 
     it = 0
     wait = 0
+
+    # Loading NBA
+    canvas.Clear()
+    graphics.DrawText(canvas, font,
+                      10,
+                      height_second_row, textColor, 'Loading NBA')
+    canvas = matrix.SwapOnVSync(canvas)
+
+    games = Scores.get_scores()
+    if len(games) == 0:
+        return -1
 
     while it < len(games):
         canvas.Clear()
