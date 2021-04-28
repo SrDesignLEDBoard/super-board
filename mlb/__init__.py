@@ -13,10 +13,6 @@ from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 def draw_board():
     """Render board for MLB"""
 
-    games = Scores.get_scores()
-    if len(games) == 0:
-        return -1
-
     # Configuration for the matrix
     options = RGBMatrixOptions()
     options.rows = ROWS
@@ -44,6 +40,25 @@ def draw_board():
 
     it = 0
     wait = 0
+
+    # Loading MLB
+    canvas.Clear()
+    graphics.DrawText(canvas, font,
+                      10,
+                      height_second_row, textColor, 'Loading MLB')
+    canvas = matrix.SwapOnVSync(canvas)
+
+    games = Scores.get_scores()
+    if len(games) == 0:
+        # Print no games scheduled
+        canvas.Clear()
+        graphics.DrawText(canvas, font,
+                          4,
+                          height_second_row, textColor, 'MLB - no games')
+        canvas = matrix.SwapOnVSync(canvas)
+        # Handle control button and wait
+        button.wait_for_press(15)
+        return -1
 
     while it < len(games):
         canvas.Clear()
@@ -93,7 +108,7 @@ def draw_board():
         image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         image_home = Image.open(f"logos/MLB/{games[it]['home']}_logo.png")
-        image_home = ImageOps.mirror(image_home)
+        # image_home = ImageOps.mirror(image_home)
         image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         # Print logos

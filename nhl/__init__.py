@@ -12,10 +12,6 @@ from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 def draw_board():
     """Render board for NHL"""
 
-    games = Scores.get_scores()
-    if len(games) == 0:
-        return -1
-
     # Configuration for the matrix
     options = RGBMatrixOptions()
     options.rows = ROWS
@@ -43,6 +39,25 @@ def draw_board():
 
     it = 0
     wait = 0
+
+    # Loading NHL
+    canvas.Clear()
+    graphics.DrawText(canvas, font,
+                      11,
+                      height_second_row, textColor, 'Loading NHL')
+    canvas = matrix.SwapOnVSync(canvas)
+
+    games = Scores.get_scores()
+    if len(games) == 0:
+        # Print no games scheduled
+        canvas.Clear()
+        graphics.DrawText(canvas, font,
+                          4,
+                          height_second_row, textColor, 'NHL - no games')
+        canvas = matrix.SwapOnVSync(canvas)
+        # Handle control button and wait
+        button.wait_for_press(15)
+        return -1
 
     while it < len(games):
         canvas.Clear()
@@ -80,6 +95,9 @@ def draw_board():
             graphics.DrawText(canvas, font,
                                 int((COLS - status_len) / 2),
                                 height_second_row, textColor, games[it]['status'])
+            graphics.DrawText(canvas, font,
+                                int((COLS - 8) / 2),
+                                height_third_row, textColor, 'ET')
         
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
