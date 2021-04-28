@@ -42,12 +42,12 @@ class Game:
                                ' '  + liveData['gameData']['datetime']['ampm'])
 
         """Top Inning variable only available when the game starts"""
-        if 'isTopInning' in liveData['liveData']['linescore'] 
+        if 'isTopInning' in liveData['liveData']['linescore']:
             self.top_inning = liveData['liveData']['linescore']['isTopInning']
             self.strikes = liveData['liveData']['linescore']['strikes']
             self.outs = liveData['liveData']['linescore']['outs']
-        else
-            self.top_inning = false
+        else:
+            self.top_inning = 'false'
             self.strikes = '0'
             self.outs = '0'
 
