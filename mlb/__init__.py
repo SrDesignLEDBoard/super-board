@@ -50,7 +50,7 @@ def draw_board():
                 graphics.DrawText(canvas, font,
                                   int((COLS - score_len) / 2),
                                   height_second_row, textColor, game['score'])
-                if game['stage'] == 'progress':
+                if game['stage'] == 'Progress':
                     # If game is in progress, print period \
                     # and time left in the period
                     period_len = len(game['period'])*4
@@ -63,7 +63,7 @@ def draw_board():
                                       int((COLS - time_len) / 2),
                                       height_third_row, textColor,
                                       game['time'])
-                elif game['stage'] == 'final':
+                elif game['stage'] == 'Final':
                     # Else print 'fin' to indicate final score
                     graphics.DrawText(canvas, font,
                                       int((COLS - 12) / 2),
