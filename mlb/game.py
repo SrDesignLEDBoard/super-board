@@ -36,10 +36,9 @@ class Game:
 
         """Inning information only available when the game starts"""
         if 'currentInningOrdinal' in liveData['liveData']['linescore'] :
-            self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal'] + ' Inning'
+            self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal']
         else :
-            self.game_clock = ('TODAY @ ' + liveData['gameData']['datetime']['time'] +
-                               ' '  + liveData['gameData']['datetime']['ampm'])
+            self.game_clock = "0"
 
         """Top Inning variable only available when the game starts"""
         if 'isTopInning' in liveData['liveData']['linescore']:
@@ -68,7 +67,7 @@ class Game:
             "away": self.away_name,
             "stage": self.game_stage,
             "status": self.game_status,
-            "clock": self.game_clock
+            "period": self.game_clock
         }
         if self.game_stage != '':
             if self.away_score == '' and self.home_score == '':
@@ -76,34 +75,34 @@ class Game:
             else:
                 matchup["score"] = f"{self.away_score} - {self.home_score}"
 
-        if self.game_stage == 'progress' and self.game_status == 'LIVE' and 'PRE' not in self.game_clock:
-            tmp = self.game_clock.split(' ')
-            matchup["time"], matchup["period"] = tmp[0], tmp[1]
+        # if self.game_stage == 'In Progress' and self.game_status == 'LIVE':
+        #     tmp = self.game_clock.split(' ')
+        #     matchup["time"], matchup["period"] = tmp[0], tmp[1]
         return matchup
 
-    def get_clock(self, width: int) -> str:
-        """Get game clock and status"""
-        clock = self.game_clock + ' (' + self.game_status + ')'
-        return clock
+    # def get_clock(self, width: int) -> str:
+    #     """Get game clock and status"""
+    #     clock = self.game_clock + ' (' + self.game_status + ')'
+    #     return clock
 
-    def is_scheduled_for(self, date: str) -> bool:
-        """True if this game is scheduled for the given date"""
-        if date.upper() in self.game_clock:
-            return True
-        else:
-            return False
+    # def is_scheduled_for(self, date: str) -> bool:
+    #     """True if this game is scheduled for the given date"""
+    #     if date.upper() in self.game_clock:
+    #         return True
+    #     else:
+    #         return False
 
-    def is_scheduled_for_today(self) -> bool:
-        """True if this game is scheduled for today"""
-        date = utils.get_date(0)
+    # def is_scheduled_for_today(self) -> bool:
+    #     """True if this game is scheduled for today"""
+    #     date = utils.get_date(0)
 
-        # must be today
-        if date.upper() in self.game_clock or \
-                'TODAY' in self.game_clock[0:5]:
-            return True
-        elif 'Inning' in self.game_clock[-6:]:
-            return True
-        return False
+    #     # must be today
+    #     if date.upper() in self.game_clock or \
+    #             'TODAY' in self.game_clock[0:5]:
+    #         return True
+    #     elif 'Inning' in self.game_clock[-6:]:
+    #         return True
+    #     return False
 
     def is_favorite_match(self, favorites: List[str]) -> bool:
         """True if game has a team favorited by the user."""
@@ -144,8 +143,8 @@ class Scores:
 
                 game = Game(game_info, away_name, home_name)
 
-                if game.is_scheduled_for_today():
-                    gs.append(game.get_matchup(config.COLS)) 
+                # if game.is_scheduled_for_today():
+                gs.append(game.get_matchup(config.COLS)) 
 
             return gs
         except Exception as e:

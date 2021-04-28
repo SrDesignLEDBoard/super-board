@@ -1,106 +1,109 @@
 import time
 import sys
 
-from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
-from PIL import Image, ImageOps
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+# from PIL import Image, ImageOps
 
 from .game import Scores
 from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 
-
 def draw_board():
-    """Render board for NHL"""
+    tmp = Scores.get_scores()
+    print(tmp)
 
-    # Configuration for the matrix
-    options = RGBMatrixOptions()
-    options.rows = ROWS
-    options.cols = COLS
-    options.chain_length = 1
-    options.parallel = 1
-    options.brightness = BRIGHTNESS
-    options.hardware_mapping = 'adafruit-hat'
+# def draw_board():
+#     """Render board for NHL"""
 
-    image_size = ROWS if ROWS < COLS else COLS
-    matrix = RGBMatrix(options=options)
+#     # Configuration for the matrix
+#     options = RGBMatrixOptions()
+#     options.rows = ROWS
+#     options.cols = COLS
+#     options.chain_length = 1
+#     options.parallel = 1
+#     options.brightness = BRIGHTNESS
+#     options.hardware_mapping = 'adafruit-hat'
 
-    canvas = matrix.CreateFrameCanvas()
-    font = graphics.Font()
-    font.LoadFont("./fonts/tom-thumb.bdf")
-    textColor = graphics.Color(255, 255, 255)
+#     image_size = ROWS if ROWS < COLS else COLS
+#     matrix = RGBMatrix(options=options)
 
-    height_first_row = 9
-    height_second_row = 18
-    height_third_row = 27
-    score_len = 20
+#     canvas = matrix.CreateFrameCanvas()
+#     font = graphics.Font()
+#     font.LoadFont("./fonts/tom-thumb.bdf")
+#     textColor = graphics.Color(255, 255, 255)
 
-    while True:
-        games = Scores.get_scores()
+#     height_first_row = 9
+#     height_second_row = 18
+#     height_third_row = 27
+#     score_len = 20
 
-        # TODO handle no games; Will be done after all leagues \
-        # are done or at last one more
-        if len(games) == 0:
-            return -1
+#     while True:
+#         games = Scores.get_scores()
 
-        for game in games:
-            canvas.Clear()
+#         # TODO handle no games; Will be done after all leagues \
+#         # are done or at last one more
+#         if len(games) == 0:
+#             return -1
 
-            if game['isGameActivated'] == True:
-                # Print score final or live
-                vscore_len = len(game['vTeam']['score'])*4
-                graphics.DrawText(canvas, font,
-                                  int((COLS - score_len) / 2),
-                                  height_second_row, textColor, game['vTeam']['score'])
-                hscore_len = len(game['hTeam']['score'])*4
-                graphics.DrawText(canvas, font,
-                                  int((COLS - score_len) / 2),
-                                  height_second_row, textColor, game['hTeam']['score'])
-                if game['period']['current'] > 0:
-                    # If game is in progress, print period \
-                    # and time left in the period
-                    period_len = len(game['period']['current'])*4
-                    time_len = len(game['clock'])*4
-                    graphics.DrawText(canvas, font,
-                                      int((COLS - period_len) / 2),
-                                      height_first_row, textColor,
-                                      game['period']['current'])
-                    graphics.DrawText(canvas, font,
-                                      int((COLS - time_len) / 2),
-                                      height_third_row, textColor,
-                                      game['clock'])
-                # elif game['period'] == 'final':
-                #     # Else print 'fin' to indicate final score
-                #     graphics.DrawText(canvas, font,
-                #                       int((COLS - 12) / 2),
-                #                       height_first_row, textColor, "fin")
-            else:
-                # If planned game, print @ and time
-                status_len = len(game['isGameActivated'])*4
-                graphics.DrawText(canvas, font,
-                                  int((COLS - 4) / 2),
-                                  height_first_row, textColor, "@")
-                graphics.DrawText(canvas, font,
-                                  int((COLS - status_len) / 2),
-                                  height_second_row, textColor, game['isGameActivated'])
+#         for game in games:
+#             canvas.Clear()
 
-            # Get x coords for logos
-            image_space = (COLS - score_len - 4) / 2
-            x_away = -ROWS + image_space
-            x_away = x_away if game['period']['current'] != '' else x_away-5
-            x_home = image_space + score_len + 4
-            x_home = x_home if game['period']['current'] != '' else x_home+5
+#             if game['isGameActivated'] == True:
+#                 # Print score final or live
+#                 vscore_len = len(game['vTeam']['score'])*4
+#                 graphics.DrawText(canvas, font,
+#                                   int((COLS - score_len) / 2),
+#                                   height_second_row, textColor, game['vTeam']['score'])
+#                 hscore_len = len(game['hTeam']['score'])*4
+#                 graphics.DrawText(canvas, font,
+#                                   int((COLS - score_len) / 2),
+#                                   height_second_row, textColor, game['hTeam']['score'])
+#                 if game['period']['current'] > 0:
+#                     # If game is in progress, print period \
+#                     # and time left in the period
+#                     period_len = len(game['period']['current'])*4
+#                     time_len = len(game['clock'])*4
+#                     graphics.DrawText(canvas, font,
+#                                       int((COLS - period_len) / 2),
+#                                       height_first_row, textColor,
+#                                       game['period']['current'])
+#                     graphics.DrawText(canvas, font,
+#                                       int((COLS - time_len) / 2),
+#                                       height_third_row, textColor,
+#                                       game['clock'])
+#                 # elif game['period'] == 'final':
+#                 #     # Else print 'fin' to indicate final score
+#                 #     graphics.DrawText(canvas, font,
+#                 #                       int((COLS - 12) / 2),
+#                 #                       height_first_row, textColor, "fin")
+#             else:
+#                 # If planned game, print @ and time
+#                 status_len = len(game['isGameActivated'])*4
+#                 graphics.DrawText(canvas, font,
+#                                   int((COLS - 4) / 2),
+#                                   height_first_row, textColor, "@")
+#                 graphics.DrawText(canvas, font,
+#                                   int((COLS - status_len) / 2),
+#                                   height_second_row, textColor, game['isGameActivated'])
 
-            # Get logos as thumbnails; home is flipped for right
-            image_away = Image.open(f"logos/NBA/{game['vTeam']['triCode']}_logo.png")
-            image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
+#             # Get x coords for logos
+#             image_space = (COLS - score_len - 4) / 2
+#             x_away = -ROWS + image_space
+#             x_away = x_away if game['period']['current'] != '' else x_away-5
+#             x_home = image_space + score_len + 4
+#             x_home = x_home if game['period']['current'] != '' else x_home+5
 
-            image_home = Image.open(f"logos/NBA/{game['hTeam']['triCode']}_logo.png")
-            image_home = ImageOps.mirror(image_home)
-            image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
+#             # Get logos as thumbnails; home is flipped for right
+#             image_away = Image.open(f"logos/NBA/{game['vTeam']['triCode']}_logo.png")
+#             image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-            # Print logos
-            canvas.SetImage(image_away.convert('RGB'), x_away, 0)
-            canvas.SetImage(image_home.convert('RGB'),
-                            x_home, 0)
+#             image_home = Image.open(f"logos/NBA/{game['hTeam']['triCode']}_logo.png")
+#             image_home = ImageOps.mirror(image_home)
+#             image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-            time.sleep(INTERVAL)
-            canvas = matrix.SwapOnVSync(canvas)
+#             # Print logos
+#             canvas.SetImage(image_away.convert('RGB'), x_away, 0)
+#             canvas.SetImage(image_home.convert('RGB'),
+#                             x_home, 0)
+
+#             time.sleep(INTERVAL)
+#             canvas = matrix.SwapOnVSync(canvas)

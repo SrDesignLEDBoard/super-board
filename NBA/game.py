@@ -18,10 +18,10 @@ class Game:
 
         self.start_date = game_info['startDateEastern']
 
-        self.away_name = abbreviations[fix_name(game_info['vTeam']['triCode'])]
+        self.away_name = game_info['vTeam']['triCode']
         self.away_score = game_info['vTeam']['score']
 
-        self.home_name = abbreviations[fix_name(game_info['hTeam']['triCode'])]
+        self.home_name = game_info['hTeam']['triCode']
         self.home_score = game_info['hTeam']['score']
 
         # Playoff-specific game information
@@ -52,13 +52,13 @@ class Game:
             "status": self.game_status,
             "clock": self.game_clock
         }
-        if self.game_period != '':
+        if self.game_period:
             if self.away_score == '' and self.home_score == '':
                 matchup["score"] = "0 - 0"
             else:
                 matchup["score"] = f"{self.away_score} - {self.home_score}"
 
-        if self.game_period != 0 and self.game_status == True :
+        if self.game_period != 0 and self.game_status :
             tmp = self.game_clock.split(' ')
             matchup["time"], matchup["period"] = tmp[0], tmp[1]
         return matchup
@@ -121,9 +121,7 @@ class Scores:
             games = []
 
             for game_info in data['games']:
-                game = Game(game_info)
-                if game.is_scheduled_for_today():
-                    games.append(game)
+                games.append(Game(game_info))
 
             gs = []
             for game in games:
