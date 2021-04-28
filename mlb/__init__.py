@@ -94,7 +94,7 @@ def draw_board():
         image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         image_home = Image.open(f"logos/MLB/{games[it]['home']}_logo.png")
-        image_home = ImageOps.mirror(image_home)
+        # image_home = ImageOps.mirror(image_home)
         image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         # Print logos
