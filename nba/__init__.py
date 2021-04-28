@@ -49,6 +49,14 @@ def draw_board():
 
     games = Scores.get_scores()
     if len(games) == 0:
+        # Print no games scheduled
+        canvas.Clear()
+        graphics.DrawText(canvas, font,
+                          4,
+                          height_second_row, textColor, 'NBA - no games')
+        canvas = matrix.SwapOnVSync(canvas)
+        # Handle control button and wait
+        button.wait_for_press(15)
         return -1
 
     while it < len(games):
