@@ -48,30 +48,29 @@ def draw_board():
     while it < len(games):
         canvas.Clear()
 
-        if games[it]['stage'] != '':
-            # Print score final or live
-            score_len = len(games[it]['score'])*4
+        """Print score final or live"""
+        score_len = len(games[it]['score'])*4
+        graphics.DrawText(canvas, font,
+                            int((COLS - score_len) / 2),
+                            height_second_row, textColor, games[it]['score'])
+        if games[it]['stage'] == 'In Progress':
+            # If game is in progress, print period \
+            # and time left in the period
+            period_len = len(games[it]['period'])*4
+            # time_len = len(games[it]['time'])*4
             graphics.DrawText(canvas, font,
-                                int((COLS - score_len) / 2),
-                                height_second_row, textColor, games[it]['score'])
-            if games[it]['stage'] == 'In Progress':
-                # If game is in progress, print period \
-                # and time left in the period
-                period_len = len(games[it]['period'])*4
-                # time_len = len(games[it]['time'])*4
-                graphics.DrawText(canvas, font,
-                                    int((COLS - period_len) / 2),
-                                    height_first_row, textColor,
-                                    games[it]['period'])
-                # graphics.DrawText(canvas, font,
-                #                     int((COLS - time_len) / 2),
-                #                     height_third_row, textColor,
-                #                     games[it]['time'])
-            elif games[it]['stage'] == 'Final':
-                # Else print 'fin' to indicate final score
-                graphics.DrawText(canvas, font,
-                                    int((COLS - 12) / 2),
-                                    height_first_row, textColor, "fin")
+                                int((COLS - period_len) / 2),
+                                height_first_row, textColor,
+                                games[it]['period'])
+            # graphics.DrawText(canvas, font,
+            #                     int((COLS - time_len) / 2),
+            #                     height_third_row, textColor,
+            #                     games[it]['time'])
+        elif games[it]['stage'] == 'Final':
+            # Else print 'fin' to indicate final score
+            graphics.DrawText(canvas, font,
+                                int((COLS - 12) / 2),
+                                height_first_row, textColor, "fin")
         else:
             # If planned game, print @ and time
             status_len = len(games[it]['status'])*4
