@@ -7,7 +7,7 @@ from PIL import Image, ImageOps
 from gpiozero import Button
 
 from .game import Scores
-from config import COLS, ROWS, INTERVAL, BRIGHTNESS
+from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
 
 def draw_board():
     """Render board for NHL"""
@@ -36,7 +36,7 @@ def draw_board():
     height_third_row = 27
 
     # Control button
-    button = Button(25)
+    button = Button(GPIO_CONTROL)
 
     it = 0
     wait = 0
@@ -72,15 +72,13 @@ def draw_board():
         image_space = (COLS - score_len - 4) / 2
         x_away = -ROWS + image_space -2 
         x_home = image_space + score_len +2
-        # x_away = 0
-        # x_home = COLS - 32
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NHL/{games[it]['away']}_logo.png")
-        image_away.thumbnail((32, 32), Image.ANTIALIAS)
+        image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         image_home = Image.open(f"logos/NHL/{games[it]['home']}_logo.png")
-        image_home.thumbnail((32, 32), Image.ANTIALIAS)
+        image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         # Print logos
         canvas.SetImage(image_away.convert('RGB'), x_away, 0)
@@ -92,7 +90,6 @@ def draw_board():
             graphics.DrawText(canvas, font,
                                   int((COLS - score_len) / 2),
                                   height_second_row, textColor, games[it]['score'])
-            # if games[it]['stage'] == 'progress':
             if games[it]['stage'] == 'progress':
                 # If game is in progress, print period \
                 # and time left in the period
