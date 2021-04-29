@@ -1,6 +1,7 @@
 import utils
 import config
 import constants
+import datetime
 from typing import List, Tuple, Dict
 
 from .teams import abbreviations_full
@@ -12,9 +13,11 @@ class Game:
         self.game_id = str(game_info['id'])
         self.game_stage = game_info['status']['type']['description']
         self.game_status = game_info['status']['type']['state']
-        
+
         if game_info['status']['displayClock'] == "0'":
-            self.game_clock = game_info['status']['type']['shortDetail']
+            #self.game_clock = game_info['status']['type']['shortDetail']
+            self.game_clock = datetime.datetime.strptime(game_info['date'], \
+                              '%Y-%m-%dT%H:%SZ').strftime('%H:%S')
         else:
             self.game_clock = game_info['status']['displayClock']
 
