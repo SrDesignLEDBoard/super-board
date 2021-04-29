@@ -68,24 +68,31 @@ def draw_board():
             graphics.DrawText(canvas, font,
                                   int((COLS - score_len) / 2),
                                   height_second_row, textColor, games[it]['score'])
+            # if games[it]['stage'] == 'progress':
             if games[it]['stage'] == 'progress':
                 # If game is in progress, print period \
                 # and time left in the period
-                period_len = len(games[it]['period'])*4
-                time_len = len(games[it]['time'])*4
-                graphics.DrawText(canvas, font,
-                                    int((COLS - period_len) / 2),
-                                    height_first_row, textColor,
-                                    games[it]['period'])
-                graphics.DrawText(canvas, font,
-                                    int((COLS - time_len) / 2),
-                                    height_third_row, textColor,
-                                    games[it]['time'])
+                if 'period' in games[it]:
+                    period_len = len(games[it]['period'])*4
+                    time_len = len(games[it]['time'])*4
+                    graphics.DrawText(canvas, font,
+                                        int((COLS - period_len) / 2),
+                                        height_first_row, textColor,
+                                        games[it]['period'])
+                    graphics.DrawText(canvas, font,
+                                        int((COLS - time_len) / 2),
+                                        height_third_row, textColor,
+                                        games[it]['time'])
+                else:
+                    graphics.DrawText(canvas, font,
+                                        int((COLS - 12) / 2),
+                                        height_first_row, textColor,
+                                        'PRE')
             elif games[it]['stage'] == 'final':
                 # Else print 'fin' to indicate final score
                 graphics.DrawText(canvas, font,
                                     int((COLS - 12) / 2),
-                                    height_first_row, textColor, "fin")
+                                    height_first_row, textColor, "FIN")
         else:
             # If planned game, print @ and time
             status_len = len(games[it]['status'])*4
@@ -125,7 +132,7 @@ def draw_board():
         # Increment iterator if button was pressed
         if is_button_pressed:
             it += 1
-            time.sleep(2)
+            time.sleep(1)
 
         # Mention to the user that they should wait after pressing the button
         # for about 5-10 seconds as it takes a while to fetch score

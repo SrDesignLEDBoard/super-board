@@ -35,11 +35,12 @@ class Game:
         self.home_name = h_name
 
         """Inning information only available when the game starts"""
-        if 'currentInningOrdinal' in liveData['liveData']['linescore'] :
+        if 'currentInningOrdinal' in liveData['liveData']['linescore'] and \
+            self.game_status == 'LIVE':
             self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal']
         else :
-            self.game_clock = liveData['gameData']['datetime']['time'] + \
-                              liveData['gameData']['datetime']['ampm'] + ' ET'
+            self.game_clock = liveData['gameData']['datetime']['time'] + ' ' + \
+                              liveData['gameData']['datetime']['ampm']
 
         """Top Inning variable only available when the game starts"""
         if 'isTopInning' in liveData['liveData']['linescore']:

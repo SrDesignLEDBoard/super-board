@@ -63,45 +63,45 @@ def draw_board():
     while it < len(games):
         canvas.Clear()
 
-        """Print score final or live"""
+        # Print score final or live
         score_len = len(games[it]['score'])*4
-        graphics.DrawText(canvas, font,
-                            int((COLS - score_len) / 2),
-                            height_second_row, textColor, games[it]['score'])
+
         if games[it]['stage'] == 'In Progress':
             # If game is in progress, print period \
             # and time left in the period
             period_len = len(games[it]['period'])*4
-            # time_len = len(games[it]['time'])*4
             graphics.DrawText(canvas, font,
                                 int((COLS - period_len) / 2),
                                 height_first_row, textColor,
                                 games[it]['period'])
-            # graphics.DrawText(canvas, font,
-            #                     int((COLS - time_len) / 2),
-            #                     height_third_row, textColor,
-            #                     games[it]['time'])
+            graphics.DrawText(canvas, font,
+                        int((COLS - score_len) / 2),
+                        height_second_row, textColor, games[it]['score'])
         elif games[it]['stage'] == 'Final':
             # Else print 'fin' to indicate final score
             graphics.DrawText(canvas, font,
                                 int((COLS - 12) / 2),
-                                height_first_row, textColor, "fin")
+                                height_first_row, textColor, "FIN")
+            graphics.DrawText(canvas, font,
+                        int((COLS - score_len) / 2),
+                        height_second_row, textColor, games[it]['score'])
         else:
             # If planned game, print @ and time
-            status_len = len(games[it]['status'])*4
+            period_len = len(games[it]['period'])*4
             graphics.DrawText(canvas, font,
                                 int((COLS - 4) / 2),
                                 height_first_row, textColor, "@")
             graphics.DrawText(canvas, font,
-                                int((COLS - status_len) / 2),
+                                int((COLS - period_len) / 2),
                                 height_second_row, textColor, games[it]['period'])
+            graphics.DrawText(canvas, font,
+                                int((COLS - 16) / 2),
+                                height_third_row, textColor, 'HOME')
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space
-        x_away = x_away if games[it]['stage'] != '' else x_away-5
+        x_away = -ROWS + image_space - 4
         x_home = image_space + score_len + 4
-        x_home = x_home if games[it]['stage'] != '' else x_home+5
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/MLB/{games[it]['away']}_logo.png")
@@ -122,7 +122,7 @@ def draw_board():
         # Increment iterator if button was pressed
         if is_button_pressed:
             it += 1
-            time.sleep(2)
+            time.sleep(1)
 
         # Mention to the user that they should wait after pressing the button
         # for about 5-10 seconds as it takes a while to fetch score

@@ -1,6 +1,7 @@
 import utils
 import config
 import constants
+import datetime
 from typing import List, Tuple, Dict
 
 from .teams import abbreviations
@@ -16,7 +17,7 @@ class Game:
         self.game_period = game_info['period']['current']
         self.game_status = game_info['isGameActivated']
 
-        self.start_date = game_info['startDateEastern'][:-3]
+        self.start_time = game_info['startTimeEastern'][:-3]
 
         self.away_name = game_info['vTeam']['triCode']
         self.away_score = game_info['vTeam']['score']
@@ -48,10 +49,10 @@ class Game:
         matchup = {
             "home": self.home_name,
             "away": self.away_name,
-            "period": self.game_period,
+            "period": str(self.game_period),
             "status": self.game_status,
             "clock": self.game_clock,
-            "starttime": self.start_date
+            "starttime": self.start_time
         }
         if self.game_period:
             if self.away_score == '' and self.home_score == '':
@@ -117,8 +118,10 @@ class Scores:
         #     "nugget":{"text":""
         # ]
 
+        x = datetime.datetime.now()
+
         try:
-            data = utils.get_JSON(constants.NBA_API)
+            data = utils.get_JSON(f"http://data.nba.net/prod/v1/{x.strftime('%Y%m%d')}/scoreboard.json")
             games = []
 
             for game_info in data['games']:
