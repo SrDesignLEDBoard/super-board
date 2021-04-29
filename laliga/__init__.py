@@ -10,8 +10,12 @@ from .game import Scores
 from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 
 
+# def draw_board():
+#     games = Scores.get_scores()
+#     print(games)
+
 def draw_board():
-    """Render board for MLB"""
+    """Render board for NHL"""
 
     # Configuration for the matrix
     options = RGBMatrixOptions()
@@ -41,11 +45,11 @@ def draw_board():
     it = 0
     wait = 0
 
-    # Loading MLB
+    # Loading La Liga
     canvas.Clear()
     graphics.DrawText(canvas, font,
                       10,
-                      height_second_row, textColor, 'Loading MLB')
+                      height_second_row, textColor, 'Loading LaL')
     canvas = matrix.SwapOnVSync(canvas)
 
     games = Scores.get_scores()
@@ -54,7 +58,7 @@ def draw_board():
         canvas.Clear()
         graphics.DrawText(canvas, font,
                           4,
-                          height_second_row, textColor, 'MLB - no games')
+                          height_second_row, textColor, 'LaL - no games')
         canvas = matrix.SwapOnVSync(canvas)
         # Handle control button and wait
         button.wait_for_press(15)
@@ -66,26 +70,7 @@ def draw_board():
         # Print score final or live
         score_len = len(games[it]['score'])*4
 
-        if games[it]['stage'] == 'In Progress':
-            # If game is in progress, print period \
-            # and time left in the period
-            period_len = len(games[it]['period'])*4
-            graphics.DrawText(canvas, font,
-                                int((COLS - period_len) / 2),
-                                height_first_row, textColor,
-                                games[it]['period'])
-            graphics.DrawText(canvas, font,
-                        int((COLS - score_len) / 2),
-                        height_second_row, textColor, games[it]['score'])
-        elif games[it]['stage'] == 'Final':
-            # Else print 'fin' to indicate final score
-            graphics.DrawText(canvas, font,
-                                int((COLS - 12) / 2),
-                                height_first_row, textColor, "FIN")
-            graphics.DrawText(canvas, font,
-                        int((COLS - score_len) / 2),
-                        height_second_row, textColor, games[it]['score'])
-        else:
+        if games[it]['stage'] == 'Scheduled':
             # If planned game, print @ and time
             period_len = len(games[it]['period'])*4
             graphics.DrawText(canvas, font,
@@ -95,8 +80,27 @@ def draw_board():
                                 int((COLS - period_len) / 2),
                                 height_second_row, textColor, games[it]['period'])
             graphics.DrawText(canvas, font,
-                                int((COLS - 16) / 2),
-                                height_third_row, textColor, 'HOME')
+                                int((COLS - 12) / 2),
+                                height_third_row, textColor, 'GMT')
+        elif games[it]['stage'] == 'Full Time':
+            # Else print 'fin' to indicate final score
+            graphics.DrawText(canvas, font,
+                                int((COLS - 12) / 2),
+                                height_first_row, textColor, "FIN")
+            graphics.DrawText(canvas, font,
+                        int((COLS - score_len) / 2),
+                        height_second_row, textColor, games[it]['score'])
+        else:
+            # If game is in progress, print period
+            # and time left in the period
+            period_len = len(games[it]['period'])*4
+            graphics.DrawText(canvas, font,
+                                int((COLS - period_len) / 2),
+                                height_first_row, textColor,
+                                games[it]['period'])
+            graphics.DrawText(canvas, font,
+                        int((COLS - score_len) / 2),
+                        height_second_row, textColor, games[it]['score'])
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
@@ -104,11 +108,11 @@ def draw_board():
         x_home = image_space + score_len + 4
 
         # Get logos as thumbnails; home is flipped for right
-        image_away = Image.open(f"logos/MLB/{games[it]['away']}_logo.png")
+        image_away = Image.open(f"logos/NHL/BOS_logo.png")
         image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-        image_home = Image.open(f"logos/MLB/{games[it]['home']}_logo.png")
-        # image_home = ImageOps.mirror(image_home)
+        image_home = Image.open(f"logos/NHL/BUF_logo.png")
+        #image_home = ImageOps.mirror(image_home)
         image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         # Print logos
@@ -141,7 +145,7 @@ def draw_board():
                 rounds = 0
                 while True:
                     canvas.Clear()
-                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'SCORE!!!')
+                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'GOAL!!!')
                     pos -= 1
                     if (pos + l < 0):
                         pos = ROWS

@@ -1,8 +1,13 @@
 import sys
-import nhl
+# import nhl, mlb, nba
+import laliga
 
 try:
     print("Press CTRL-C to stop.")
-    nhl.draw_board()
+    while True:
+        laliga.draw_board()
+        # nhl.draw_board()
+        # mlb.draw_board()
+        # nba.draw_board()
 except KeyboardInterrupt:
     sys.exit(0)

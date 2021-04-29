@@ -1,6 +1,10 @@
 import datetime
 import requests
-import json
+
+try:
+    import ujson as json
+except ImportError:
+    import json
 
 
 def get_date(delta: int):
@@ -20,8 +24,9 @@ def get_JSON(URL):
     if 'nhle' in URL:
         response = response.text.replace('loadScoreboard(', '')
         response = response.replace(')', '')
-    if 'mlb' in URL or 'espn' in URL:
-        response = json.loads(response.text)
-    else:
         response = json.loads(response)
+    # elif 'mlb' in URL or 'espn' in URL:
+    #     response = json.loads(response.text)
+    else:
+        response = json.loads(response.text)
     return response
