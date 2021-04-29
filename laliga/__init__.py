@@ -4,6 +4,8 @@ import sys
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from PIL import Image, ImageOps
 
+from gpiozero import Button
+
 from .game import Scores
 from config import COLS, ROWS, INTERVAL, BRIGHTNESS
 
@@ -68,7 +70,7 @@ def draw_board():
         # Print score final or live
         score_len = len(games[it]['score'])*4
 
-        if game['stage'] == 'Scheduled':
+        if games[it]['stage'] == 'Scheduled':
             # If planned game, print @ and time
             period_len = len(games[it]['period'])*4
             graphics.DrawText(canvas, font,
@@ -76,15 +78,15 @@ def draw_board():
                                 height_first_row, textColor, "@")
             graphics.DrawText(canvas, font,
                                 int((COLS - period_len) / 2),
-                                height_second_row, textColor, game['period'])
+                                height_second_row, textColor, games[it]['period'])
             graphics.DrawText(canvas, font,
-                                int((COLS - 16) / 2),
+                                int((COLS - 12) / 2),
                                 height_third_row, textColor, 'GMT')
-        elif game['stage'] == 'Full Time':
+        elif games[it]['stage'] == 'Full Time':
             # Else print 'fin' to indicate final score
             graphics.DrawText(canvas, font,
                                 int((COLS - 12) / 2),
-                                height_first_row, textColor, "fin")
+                                height_first_row, textColor, "FIN")
             graphics.DrawText(canvas, font,
                         int((COLS - score_len) / 2),
                         height_second_row, textColor, games[it]['score'])
@@ -137,6 +139,23 @@ def draw_board():
             if games[it]['away'] != games[it]['away'] and \
                 tmp[it]['home'] != tmp[it]['home']:
                 it = 0
+            elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
+                # check for score update
+                pos = ROWS
+                rounds = 0
+                while True:
+                    canvas.Clear()
+                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'GOAL!!!')
+                    pos -= 1
+                    if (pos + l < 0):
+                        pos = ROWS
+                        rounds += 1
+                        if rounds > 3:
+                            break
+
+                    time.sleep(0.05)
+                    canvas = matrix.SwapOnVSync(canvas)
+
             games = tmp
 
         canvas = matrix.SwapOnVSync(canvas)
