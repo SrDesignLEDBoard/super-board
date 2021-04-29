@@ -29,8 +29,6 @@ class Game:
             self.away_score = ''
             self.home_score = ''
 
-        #self.away_name = liveData['gameData']['teams']['away']['abbreviation']
-        #self.home_name = liveData['gameData']['teams']['home']['abbreviation']
         self.away_name = a_name
         self.home_name = h_name
 
@@ -52,16 +50,6 @@ class Game:
             self.strikes = ''
             self.outs = ''
 
-    def get_scoreline(self, width: int) -> Dict[str, str]:
-        """Get current score in a dict with team names and score"""
-        score = {
-            "home": self.home_name,
-            "away": self.away_name,
-            "score": f"{self.away_score} - {self.home_score}",
-            "status": self.game_status
-        }
-        return score
-
     def get_matchup(self, width: int) -> Dict[str, str]:
         """Get full names of both teams"""
         matchup = {
@@ -78,13 +66,6 @@ class Game:
                 matchup["score"] = f"{self.away_score} - {self.home_score}"
 
         return matchup
-
-    def is_favorite_match(self, favorites: List[str]) -> bool:
-        """True if game has a team favorited by the user."""
-        for team in favorites:
-            if team == self.home_name or team == self.away_name:
-                return True
-        return False
 
 
 class Scores:
