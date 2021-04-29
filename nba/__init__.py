@@ -75,16 +75,14 @@ def draw_board():
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NBA/{games[it]['away']}_logo.png")
-        image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
+        image_away.thumbnail((32, 32), Image.ANTIALIAS)
 
         image_home = Image.open(f"logos/NBA/{games[it]['home']}_logo.png")
-        # image_home = ImageOps.mirror(image_home)
-        image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
+        image_home.thumbnail((32, 32), Image.ANTIALIAS)
 
         # Print logos
         canvas.SetImage(image_away.convert('RGB'), x_away, 0)
-        canvas.SetImage(image_home.convert('RGB'),
-                        x_home, 0)
+        canvas.SetImage(image_home.convert('RGB'), x_home, 0)
 
         if games[it]['status_num'] > 1:
             # Print score final or live

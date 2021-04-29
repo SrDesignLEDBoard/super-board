@@ -20,7 +20,8 @@ class Game:
                               '%Y-%m-%dT%H:%SZ').strftime('%H:%S')
             self.game_period = 0
         else:
-            self.game_clock = game_info['status']['displayClock']
+            # self.game_clock = game_info['status']['displayClock']
+            self.game_clock = game_info['status']['type']['shortDetail']
             self.game_period = game_info['status']['period']
 
         self.away_name = a_name

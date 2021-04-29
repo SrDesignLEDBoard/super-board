@@ -84,8 +84,7 @@ def draw_board():
 
         # Print logos
         canvas.SetImage(image_away.convert('RGB'), x_away, 0)
-        canvas.SetImage(image_home.convert('RGB'),
-                        x_home, 0)
+        canvas.SetImage(image_home.convert('RGB'), x_home, 0)
 
         if games[it]['stage'] != '':
             # Print score final or live
