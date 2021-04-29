@@ -79,10 +79,10 @@ def draw_board():
         x_home = image_space + score_len +2
 
         # Get logos as thumbnails; home is flipped for right
-        image_away = Image.open(f"logos/LaLiga/GCF.png")
+        image_away = Image.open(f"logos/LaLiga/{games[it]['away']}_logo.png")
         image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
-        image_home = Image.open(f"logos/LaLiga/FCB.png")
+        image_home = Image.open(f"logos/LaLiga/{games[it]['home']}_logo.png")
         image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
 
         # Print logos

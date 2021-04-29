@@ -10,7 +10,7 @@ INTERVAL = 10
 SCROLL = 5
 
 MLB_FAVS = ['TEX', 'PIT']
-NBA_FAVS = ['UTA', 'CHI', 'POR']
+NBA_FAVS = ['HOU']
 NHL_FAVS = ['PIT', 'EDM', 'PHI']
 LALIGA_FAVS = ['FCB', 'ATB']
 
