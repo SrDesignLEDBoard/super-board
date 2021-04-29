@@ -135,6 +135,23 @@ def draw_board():
             if games[it]['away'] != games[it]['away'] and \
                 tmp[it]['home'] != tmp[it]['home']:
                 it = 0
+            elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
+                # check for score update
+                pos = ROWS
+                rounds = 0
+                while True:
+                    canvas.Clear()
+                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'SCORE!!!')
+                    pos -= 1
+                    if (pos + l < 0):
+                        pos = ROWS
+                        rounds += 1
+                        if rounds > 3:
+                            break
+
+                    time.sleep(0.05)
+                    canvas = matrix.SwapOnVSync(canvas)
+
             games = tmp
 
         canvas = matrix.SwapOnVSync(canvas)
