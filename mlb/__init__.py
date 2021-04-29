@@ -89,8 +89,8 @@ def draw_board():
             # If planned game, print @ and time
             period_len = len(games[it]['period'])*4
             graphics.DrawText(canvas, font,
-                                int((COLS - 4) / 2),
-                                height_first_row, textColor, "@")
+                                int((COLS - 8) / 2),
+                                height_first_row, textColor, "AT")
             graphics.DrawText(canvas, font,
                                 int((COLS - period_len) / 2),
                                 height_second_row, textColor, games[it]['period'])
@@ -135,7 +135,7 @@ def draw_board():
             if games[it]['away'] != games[it]['away'] and \
                 tmp[it]['home'] != tmp[it]['home']:
                 it = 0
-            elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
+            elif games[it]['stage'] == 'In Progress' and games[it]['score'] != tmp[it]['score']:
                 # check for score update
                 pos = ROWS
                 rounds = 0

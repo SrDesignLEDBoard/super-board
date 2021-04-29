@@ -95,23 +95,25 @@ def draw_board():
                                     height_first_row, textColor, "FIN")
         else:
             # If planned game, print @ and time
-            status_len = len(games[it]['status'])*4
-            graphics.DrawText(canvas, font,
-                                int((COLS - 4) / 2),
-                                height_first_row, textColor, "@")
-            graphics.DrawText(canvas, font,
-                                int((COLS - status_len) / 2),
-                                height_second_row, textColor, games[it]['status'])
+            tmptime = games[it]['status'].split()
+            time_len = len(games[it]['status'])*4
+
             graphics.DrawText(canvas, font,
                                 int((COLS - 8) / 2),
-                                height_third_row, textColor, 'ET')
+                                height_first_row, textColor, "AT")
+            graphics.DrawText(canvas, font,
+                                int((COLS - time_len) / 2),
+                                height_second_row, textColor, tmptime[0])
+            graphics.DrawText(canvas, font,
+                                int((COLS - 8) / 2),
+                                height_third_row, textColor, tmptime[1] + ' ET')
         
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
         x_away = -ROWS + image_space
-        x_away = x_away if games[it]['stage'] != '' else x_away-5
+        # x_away = x_away if games[it]['stage'] != '' else x_away-5
         x_home = image_space + score_len + 4
-        x_home = x_home if games[it]['stage'] != '' else x_home+5
+        # x_home = x_home if games[it]['stage'] != '' else x_home+5
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NHL/{games[it]['away']}_logo.png")
@@ -145,7 +147,7 @@ def draw_board():
             if games[it]['away'] != games[it]['away'] and \
                 tmp[it]['home'] != tmp[it]['home']:
                 it = 0
-            elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
+            elif games[it]['stage'] == 'progress' and games[it]['score'] != tmp[it]['score']:
                 # check for score update
                 pos = ROWS
                 rounds = 0

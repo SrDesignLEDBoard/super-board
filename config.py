@@ -3,13 +3,13 @@ COLS = 64
 ROWS = 32
 
 GPIO_MAPPING = "adafruit-hat"
-BRIGHTNESS = 80
+BRIGHTNESS = 60
 
 INTERVAL = 10
 SCROLL = 5
 
 MLB_FAVS = ['TEX', 'PIT']
 NBA_FAVS = ['UTA', 'CHI', 'POR']
-NHL_FAVS = ['MTL', 'EDM', 'CBJ']
-LALIGA_FAVS = ['ATB']
+NHL_FAVS = ['PIT', 'EDM', 'PHI']
+LALIGA_FAVS = ['FCB', 'ATB']
 

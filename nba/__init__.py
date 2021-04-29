@@ -85,8 +85,8 @@ def draw_board():
             # If planned game, print @ and time
             status_len = len(games[it]['starttime'])*4
             graphics.DrawText(canvas, font,
-                                int((COLS - 4) / 2),
-                                height_first_row, textColor, "@")
+                                int((COLS - 8) / 2),
+                                height_first_row, textColor, "AT")
             graphics.DrawText(canvas, font,
                                 int((COLS - status_len) / 2),
                                 height_second_row, textColor, games[it]['starttime'])
