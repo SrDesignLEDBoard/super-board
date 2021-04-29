@@ -123,7 +123,7 @@ def draw_board():
         # Mention to the user that they should wait after pressing the button
         # for about 5-10 seconds as it takes a while to fetch score
         wait += 1
-        if wait > 12:
+        if wait > 4:
             wait = 0
             tmp = Scores.get_scores()
 
@@ -131,6 +131,23 @@ def draw_board():
             if games[it]['away'] != games[it]['away'] and \
                 tmp[it]['home'] != tmp[it]['home']:
                 it = 0
+            elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
+                # check for score update
+                pos = ROWS
+                rounds = 0
+                while True:
+                    canvas.Clear()
+                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'SCORE!!!')
+                    pos -= 1
+                    if (pos + l < 0):
+                        pos = ROWS
+                        rounds += 1
+                        if rounds > 3:
+                            break
+
+                    time.sleep(0.05)
+                    canvas = matrix.SwapOnVSync(canvas)
+
             games = tmp
 
         canvas = matrix.SwapOnVSync(canvas)
