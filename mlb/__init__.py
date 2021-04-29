@@ -35,7 +35,6 @@ def draw_board():
     height_first_row = 9
     height_second_row = 18
     height_third_row = 27
-    score_len = 20
 
     # Control button
     button = Button(25)
@@ -64,6 +63,11 @@ def draw_board():
 
     while it < len(games):
         canvas.Clear()
+        
+        score_len = 20
+        if 'score' in games[it]:
+            # Chagne score len if 2 digit score
+            score_len = 28 if games[it]['score'][3] == '-' else 20 
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
