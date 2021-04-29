@@ -18,8 +18,10 @@ class Game:
             #self.game_clock = game_info['status']['type']['shortDetail']
             self.game_clock = datetime.datetime.strptime(game_info['date'], \
                               '%Y-%m-%dT%H:%SZ').strftime('%H:%S')
+            self.game_period = 0
         else:
             self.game_clock = game_info['status']['displayClock']
+            self.game_period = game_info['status']['period']
 
         self.away_name = a_name
         self.away_score = game_info['competitions'][0]['competitors'][1]['score']
@@ -51,9 +53,7 @@ class Game:
             else:
                 matchup["score"] = f"{self.away_score} - {self.home_score}"
 
-        if self.game_stage == 'progress' and self.game_status == 'live' and 'pre' not in self.game_clock:
-            tmp = self.game_clock.split(' ')
-            matchup["time"], matchup["period"] = tmp[0], tmp[1]
+        matchup['period'] = 'H' + str(self.game_period)
         return matchup
 
     def get_clock(self, width: int) -> str:

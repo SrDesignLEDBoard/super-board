@@ -66,13 +66,12 @@ def draw_board():
         score_len = 20
         if 'score' in games[it]:
             # Chagne score len if 2 digit score
-            score_len = 28 if game[it]['score'][3] == '-' else \
-                    36 if games[it]['score'][4] == '-' else 20
+            score_len = 28 if games[it]['score'][2] != '-' else 20
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space - 4
-        x_home = image_space + score_len + 8
+        x_away = -ROWS + image_space -2
+        x_home = image_space + score_len +2
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NBA/{games[it]['away']}_logo.png")
@@ -87,13 +86,13 @@ def draw_board():
         canvas.SetImage(image_home.convert('RGB'),
                         x_home, 0)
 
-        if games[it]['status']:
+        if games[it]['status_num'] > 1:
             # Print score final or live
             score_len = len(games[it]['score'])*4
             graphics.DrawText(canvas, font,
                                 int((COLS - score_len) / 2),
                                 height_second_row, textColor, games[it]['score'])
-            if int(games[it]['period']) > 0:
+            if games[it]['status_num'] == 2:
                 # If game is in progress, print period \
                 # and time left in the period
                 period_len = 8
@@ -106,6 +105,10 @@ def draw_board():
                                     int((COLS - time_len) / 2),
                                     height_third_row, textColor,
                                     games[it]['clock'])
+            else:
+                graphics.DrawText(canvas, font,
+                                    int((COLS - 12) / 2),
+                                    height_first_row, textColor, "FIN")
         else:
             # If planned game, print @ and time
             status_len = len(games[it]['starttime'])*4

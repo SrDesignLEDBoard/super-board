@@ -75,8 +75,8 @@ def draw_board():
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space - 4
-        x_home = image_space + score_len + 4
+        x_away = -ROWS + image_space -2
+        x_home = image_space + score_len +2
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NHL/BOS_logo.png")
@@ -118,6 +118,7 @@ def draw_board():
             # If game is in progress, print period
             # and time left in the period
             period_len = len(games[it]['period'])*4
+            clock_len = len(games[it]['clock'])*4
             graphics.DrawText(canvas, font,
                                 int((COLS - period_len) / 2),
                                 height_first_row, textColor,
@@ -125,6 +126,9 @@ def draw_board():
             graphics.DrawText(canvas, font,
                         int((COLS - score_len) / 2),
                         height_second_row, textColor, games[it]['score'])
+            graphics.DrawText(canvas, font,
+                        int((COLS - clock_len) / 2),
+                        height_third_row, textColor, games[it]['clock'])
 
         # Handle control button and wait
         is_button_pressed = button.wait_for_press(5)

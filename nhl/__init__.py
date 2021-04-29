@@ -70,8 +70,8 @@ def draw_board():
         
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space
-        x_home = image_space + score_len + 4
+        x_away = -ROWS + image_space -2 
+        x_home = image_space + score_len +2
         # x_away = 0
         # x_home = COLS - 32
 

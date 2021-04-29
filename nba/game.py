@@ -16,6 +16,7 @@ class Game:
         self.game_clock = game_info['clock']
         self.game_period = game_info['period']['current']
         self.game_status = game_info['isGameActivated']
+        self.game_status_num = game_info['statusNum']
 
         self.start_time = game_info['startTimeEastern'][:-3]
 
@@ -51,6 +52,7 @@ class Game:
             "away": self.away_name,
             "period": str(self.game_period),
             "status": self.game_status,
+            "status_num": self.game_status_num,
             "clock": self.game_clock,
             "starttime": self.start_time
         }

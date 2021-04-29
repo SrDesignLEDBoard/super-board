@@ -71,8 +71,8 @@ def draw_board():
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space - 4
-        x_home = image_space + score_len + 4
+        x_away = -ROWS + image_space -2
+        x_home = image_space + score_len +2
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/MLB/{games[it]['away']}_logo.png")
