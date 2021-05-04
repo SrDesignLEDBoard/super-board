@@ -7,18 +7,22 @@ from typing import List, Tuple, Dict
 from .teams import abbreviations_full
 
 class Game:
-    """Game represents a scheduled NHL game"""
+    """Represent a scheduled MLB game
+
+    Args:
+        game_info (Dict[str, any]): Dictionary generated from JSON object
+    """
     def __init__(self, game_info: Dict[str, any], a_name: str, h_name: str): 
-        """Open new json file that includes live updates to the game"""
+        # """Open new json file that includes live updates to the game"""
         liveData = utils.get_JSON('http://statsapi.mlb.com'+game_info['link'])
 
-        """Parse JSON to attributes"""
+        # """Parse JSON to attributes"""
         self.game_id = str(game_info['gamePk'])
 
-        """Possible States: Scheduled, Pre-Game, Warmup, In Progress, Final"""
+        # """Possible States: Scheduled, Pre-Game, Warmup, In Progress, Final"""
         self.game_stage = game_info['status']['detailedState']
 
-        """Capitalize the status of the game so its easier to be displayed"""
+        # """Capitalize the status of the game so its easier to be displayed"""
         self.game_status = game_info['status']['abstractGameState'].upper()
 
         if 'score' in game_info['teams']['away'] or \
@@ -32,7 +36,7 @@ class Game:
         self.away_name = a_name
         self.home_name = h_name
 
-        """Inning information only available when the game starts"""
+        # """Inning information only available when the game starts"""
         if 'currentInningOrdinal' in liveData['liveData']['linescore'] and \
             self.game_status == 'LIVE':
             self.game_clock = liveData['liveData']['linescore']['currentInningOrdinal']
@@ -40,7 +44,7 @@ class Game:
             self.game_clock = liveData['gameData']['datetime']['time'] + ' ' + \
                               liveData['gameData']['datetime']['ampm']
 
-        """Top Inning variable only available when the game starts"""
+        # """Top Inning variable only available when the game starts"""
         if 'isTopInning' in liveData['liveData']['linescore']:
             self.top_inning = liveData['liveData']['linescore']['isTopInning']
             self.strikes = liveData['liveData']['linescore']['strikes']
@@ -50,8 +54,12 @@ class Game:
             self.strikes = ''
             self.outs = ''
 
-    def get_matchup(self, width: int) -> Dict[str, str]:
-        """Get full names of both teams"""
+    def get_matchup(self) -> Dict[str, str]:
+        """Get information of a single game.
+
+        Returns:
+            Dict[str, str]: Game information in a dictionary.
+        """
         matchup = {
             "home": self.home_name,
             "away": self.away_name,
@@ -71,8 +79,11 @@ class Game:
 class Scores:
     @staticmethod
     def get_scores() -> List[Tuple[str, str]]:
-        """Get a list of scores/games that are on-going
-                or planned for the day (in that order)"""
+        """Get a list of scores/games that are on-going or planned for the day (in that order)
+
+        Returns:
+            List[Tuple[str, str]]: List of python dicts that contain information of today's games.
+        """
         try:
             data = utils.get_JSON(constants.MLB_API)
 

@@ -7,9 +7,20 @@ from typing import List, Tuple, Dict
 from .teams import abbreviations_full
 
 class Game:
-    """Game represents a scheduled NHL game"""
+    """Represent a scheduled LaLiga game
+
+    Args:
+        game_info (Dict[str, any]): Dictionary generated from JSON object
+    """
+
     def __init__(self, game_info: Dict[str, any], a_name: str, h_name: str):
-        """Parse JSON to attributes"""
+        """Parse JSON to attributes
+
+        Args:
+            game_info (Dict[str, any]): Dictionary generated from JSON object
+            a_name (str): Name of away team
+            h_name (str): Name of home team
+        """
         self.game_id = str(game_info['id'])
         self.game_stage = game_info['status']['type']['description']
         self.game_status = game_info['status']['type']['state']
@@ -30,7 +41,11 @@ class Game:
         self.home_score = game_info['competitions'][0]['competitors'][0]['score']
 
     def get_matchup(self, width: int) -> Dict[str, str]:
-        """Get full names of both teams"""
+        """Get information of a single game.
+
+        Returns:
+            Dict[str, str]: Game information in a dictionary.
+        """
         matchup = {
             "home": self.home_name,
             "away": self.away_name,
@@ -51,19 +66,21 @@ class Game:
 class Scores:
     @staticmethod
     def get_scores() -> List[Tuple[str, str]]:
-        """Get a list of scores/games that are on-going
-                or planned for the day (in that order)"""
+        """Get a list of scores/games that are on-going or planned for the day (in that order)
 
+        Returns:
+            List[Tuple[str, str]]: List of python dicts that contain information of today's games.
+        """
         try:
             data = utils.get_JSON(constants.LALIGA_API)
             
-            """Only focus on the games scheduled today"""
+            # """Only focus on the games scheduled today"""
             all_games = data['events']
 
             gs = []
 
             for game_info in all_games:
-                """Only add teams that are the user's favorites"""
+                # """Only add teams that are the user's favorites"""
                 away_name = abbreviations_full[game_info['competitions'][0]['competitors'][1]['team']['name']]
                 home_name = abbreviations_full[game_info['competitions'][0]['competitors'][0]['team']['name']]
 

@@ -13,6 +13,7 @@ class Game:
     Args:
         game_info (Dict[str, any]): Dictionary generated from JSON object
     """
+    
     def __init__(self, game_info: Dict[str, any]):
         """Parse JSON to attributes
 

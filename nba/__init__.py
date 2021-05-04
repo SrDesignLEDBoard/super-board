@@ -10,7 +10,11 @@ from .game import Scores
 from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
 
 def draw_board():
-    """Render board for NBA"""
+    """Draw components of NBA game
+
+    Returns:
+        int: Return -1 if no favorite game.
+    """
 
     # Configuration for the matrix
     options = RGBMatrixOptions()

@@ -5,9 +5,17 @@ import datetime
 from typing import List, Tuple, Dict
 
 class Game:
-    """Game represents a scheduled NBA game"""
+    """Represent a scheduled NBA game
+
+    Args:
+        game_info (Dict[str, any]): Dictionary generated from JSON object
+    """
     def __init__(self, game_info: Dict[str, any]):
-        """Parse JSON to attributes"""
+        """Parse JSON to attributes
+
+        Args:
+            game_info (Dict[str, any]): Dictionary generated from JSON object
+        """
         self.game_id = str(game_info['gameId'])
         self.game_clock = game_info['clock']
         self.game_period = game_info['period']['current']
@@ -23,7 +31,11 @@ class Game:
         self.home_score = game_info['hTeam']['score']
 
     def get_matchup(self, width: int) -> Dict[str, str]:
-        """Get full names of both teams"""
+        """Get information of a single game.
+
+        Returns:
+            Dict[str, str]: Game information in a dictionary.
+        """
         matchup = {
             "home": self.home_name,
             "away": self.away_name,
@@ -43,7 +55,11 @@ class Game:
         return matchup
 
     def is_favorite_match(self, favorites: List[str]) -> bool:
-        """True if game has a team favorited by the user."""
+        """Check if game has a team favorited by the user.
+
+        Returns:
+            bool: True if game if scheduled for today.
+        """
         for team in favorites:
             if team == self.home_name or team == self.away_name:
                 return True
@@ -53,9 +69,11 @@ class Game:
 class Scores:
     @staticmethod
     def get_scores() -> List[Tuple[str, str]]:
-        """Get a list of scores/games that are on-going
-                or planned for the day (in that order)"""
+        """Get a list of scores/games that are on-going or planned for the day (in that order)
 
+        Returns:
+            List[Tuple[str, str]]: List of python dicts that contain information of today's games.
+        """
         x = datetime.datetime.now()
 
         try:

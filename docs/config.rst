@@ -1,9 +1,9 @@
-.. Main.py
+.. Config.py
 
-main.py
+config.py
 =======
 
-.. automodule:: main
+.. automodule:: config
   :members:
 
 

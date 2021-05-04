@@ -1,3 +1,6 @@
+"""Abbreviation information about NBA teams
+"""
+
 abbreviations = {
     "Hawks"           : "ATL",
     "Celtics"          : "BKN",

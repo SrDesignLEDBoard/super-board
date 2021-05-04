@@ -10,8 +10,13 @@ Welcome to LEDScoreboard's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   main
+   config
+   utils
    nhl
+   nba
+   mlb
+   laliga
+   other
 
 
 Indices and tables
