@@ -8,9 +8,17 @@ from .fix_names import *
 
 
 class Game:
-    """Game represents a scheduled NHL game"""
+    """Represent a scheduled NHL game
+
+    Args:
+        game_info (Dict[str, any]): Dictionary generated from JSON object
+    """
     def __init__(self, game_info: Dict[str, any]):
-        """Parse JSON to attributes"""
+        """Parse JSON to attributes
+
+        Args:
+            game_info (Dict[str, any]): Dictionary generated from JSON object
+        """
         self.game_id = str(game_info['id'])
         self.game_clock = game_info['ts']
         self.game_stage = game_info['tsc']
@@ -20,8 +28,12 @@ class Game:
         self.home_name = abbreviations[fix_name(game_info['htv'])]
         self.home_score = game_info['hts']
 
-    def get_matchup(self, width: int) -> Dict[str, str]:
-        """Get full names of both teams"""
+    def get_matchup(self) -> Dict[str, str]:
+        """Get information of a single game.
+
+        Returns:
+            Dict[str, str]: Game information in a dictionary.
+        """
         matchup = {
             "home": self.home_name,
             "away": self.away_name,
@@ -41,7 +53,11 @@ class Game:
         return matchup
 
     def is_scheduled_for_today(self) -> bool:
-        """True if this game is scheduled for today"""
+        """Check if game is scheduled for today
+
+        Returns:
+            bool: True if game if scheduled for today.
+        """
         date = utils.get_date(0)
 
         # must be today
@@ -58,9 +74,13 @@ class Game:
             return True
         return False
 
-    def is_favorite_match(self, favorites: List[str]) -> bool:
-        """True if game has a team favorited by the user."""
-        for team in favorites:
+    def is_favorite_match(self) -> bool:
+        """Check if game has a team favorited by the user.
+
+        Returns:
+            bool: True if game if scheduled for today.
+        """
+        for team in config.NHL_FAVS:
             if team == self.home_name or team == self.away_name:
                 return True
         return False
@@ -69,8 +89,11 @@ class Game:
 class Scores:
     @staticmethod
     def get_scores() -> List[Tuple[str, str]]:
-        """Get a list of scores/games that are on-going
-                or planned for the day (in that order)"""
+        """Get a list of scores/games that are on-going or planned for the day (in that order)
+
+        Returns:
+            List[Tuple[str, str]]: List of python dicts that contain information of today's games.
+        """
         try:
             data = utils.get_JSON(constants.NHL_API)
             games = []
@@ -82,10 +105,10 @@ class Scores:
 
             gs = []
             for game in games:
-                if not game.is_favorite_match(config.NHL_FAVS):
+                if not game.is_favorite_match():
                     continue
 
-                gs.append(game.get_matchup(config.COLS))
+                gs.append(game.get_matchup())
 
             return gs
         except Exception as e:

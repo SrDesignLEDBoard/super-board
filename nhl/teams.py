@@ -1,3 +1,6 @@
+"""Abbreviation information about NHL teams
+"""
+
 abbreviations = {
     "Ducks":            "ANA",
     "Coyotes":          "ARI",

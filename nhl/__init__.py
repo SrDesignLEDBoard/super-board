@@ -9,8 +9,12 @@ from gpiozero import Button
 from .game import Scores
 from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
 
-def draw_board():
-    """Render board for NHL"""
+def draw_board() -> int:
+    """Draw components of NHL game
+
+    Returns:
+        int: Return -1 if no favorite game.
+    """
 
     # Configuration for the matrix
     options = RGBMatrixOptions()
