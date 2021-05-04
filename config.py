@@ -9,8 +9,8 @@ BRIGHTNESS = 60
 INTERVAL = 10
 SCROLL = 5
 
-MLB_FAVS = ['TEX', 'PIT']
-NBA_FAVS = ['HOU']
-NHL_FAVS = ['PIT', 'EDM', 'PHI']
+MLB_FAVS = ['BOS']
+NBA_FAVS = ['BKN', 'DAL']
+NHL_FAVS = ['PIT', 'EDM']
 LALIGA_FAVS = ['FCB', 'ATB']
 

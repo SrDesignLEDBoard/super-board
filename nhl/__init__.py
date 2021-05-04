@@ -109,7 +109,8 @@ def draw_board():
                                         int((COLS - 12) / 2),
                                         height_first_row, textColor,
                                         'PRE')
-            elif games[it]['stage'] == 'final':
+            # elif games[it]['stage'] == 'final':
+            else:
                 # Else print 'fin' to indicate final score
                 graphics.DrawText(canvas, font,
                                     int((COLS - 12) / 2),
