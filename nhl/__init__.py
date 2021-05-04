@@ -7,7 +7,7 @@ from PIL import Image, ImageOps
 from gpiozero import Button
 
 from .game import Scores
-from config import COLS, ROWS, INTERVAL, BRIGHTNESS
+from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
 
 def draw_board():
     """Render board for NHL"""
@@ -27,15 +27,16 @@ def draw_board():
     canvas = matrix.CreateFrameCanvas()
     font = graphics.Font()
     font.LoadFont("./fonts/tom-thumb.bdf")
-    textColor = graphics.Color(255, 255, 255)
+    anifont = graphics.Font()
+    anifont.LoadFont("./fonts/cherry-10-b.bdf")
+    textColor = graphics.Color(225, 225, 0)
 
     height_first_row = 9
     height_second_row = 18
     height_third_row = 27
-    score_len = 20
 
     # Control button
-    button = Button(25)
+    button = Button(GPIO_CONTROL)
 
     it = 0
     wait = 0
@@ -62,13 +63,33 @@ def draw_board():
     while it < len(games):
         canvas.Clear()
 
+        score_len = 20 
+        if 'score' in games[it]:
+            # Chagne score len if 2 digit score
+            score_len = 28 if games[it]['score'][3] == '-' else 20 
+        
+        # Get x coords for logos
+        image_space = (COLS - score_len - 4) / 2
+        x_away = -ROWS + image_space -2 
+        x_home = image_space + score_len +2
+
+        # Get logos as thumbnails; home is flipped for right
+        image_away = Image.open(f"logos/NHL/{games[it]['away']}_logo.png")
+        image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
+
+        image_home = Image.open(f"logos/NHL/{games[it]['home']}_logo.png")
+        image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
+
+        # Print logos
+        canvas.SetImage(image_away.convert('RGB'), x_away, 0)
+        canvas.SetImage(image_home.convert('RGB'), x_home, 0)
+
         if games[it]['stage'] != '':
             # Print score final or live
             score_len = len(games[it]['score'])*4
             graphics.DrawText(canvas, font,
                                   int((COLS - score_len) / 2),
                                   height_second_row, textColor, games[it]['score'])
-            # if games[it]['stage'] == 'progress':
             if games[it]['stage'] == 'progress':
                 # If game is in progress, print period \
                 # and time left in the period
@@ -88,7 +109,8 @@ def draw_board():
                                         int((COLS - 12) / 2),
                                         height_first_row, textColor,
                                         'PRE')
-            elif games[it]['stage'] == 'final':
+            # elif games[it]['stage'] == 'final':
+            else:
                 # Else print 'fin' to indicate final score
                 graphics.DrawText(canvas, font,
                                     int((COLS - 12) / 2),
@@ -96,7 +118,7 @@ def draw_board():
         else:
             # If planned game, print @ and time
             tmptime = games[it]['status'].split()
-            time_len = len(games[it]['status'])*4
+            time_len = len(tmptime[0])*4
 
             graphics.DrawText(canvas, font,
                                 int((COLS - 8) / 2),
@@ -105,28 +127,8 @@ def draw_board():
                                 int((COLS - time_len) / 2),
                                 height_second_row, textColor, tmptime[0])
             graphics.DrawText(canvas, font,
-                                int((COLS - 8) / 2),
+                                int((COLS - 20) / 2),
                                 height_third_row, textColor, tmptime[1] + ' ET')
-        
-        # Get x coords for logos
-        image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space
-        # x_away = x_away if games[it]['stage'] != '' else x_away-5
-        x_home = image_space + score_len + 4
-        # x_home = x_home if games[it]['stage'] != '' else x_home+5
-
-        # Get logos as thumbnails; home is flipped for right
-        image_away = Image.open(f"logos/NHL/{games[it]['away']}_logo.png")
-        image_away.thumbnail((image_size, image_size), Image.ANTIALIAS)
-
-        image_home = Image.open(f"logos/NHL/{games[it]['home']}_logo.png")
-        # image_home = ImageOps.mirror(image_home)
-        image_home.thumbnail((image_size, image_size), Image.ANTIALIAS)
-
-        # Print logos
-        canvas.SetImage(image_away.convert('RGB'), x_away, 0)
-        canvas.SetImage(image_home.convert('RGB'),
-                        x_home, 0)
 
         # Handle control button and wait
         is_button_pressed = button.wait_for_press(5)
@@ -139,7 +141,7 @@ def draw_board():
         # Mention to the user that they should wait after pressing the button
         # for about 5-10 seconds as it takes a while to fetch score
         wait += 1
-        if wait > 12:
+        if wait > 12 and it < len(games):
             wait = 0
             tmp = Scores.get_scores()
 
@@ -153,7 +155,7 @@ def draw_board():
                 rounds = 0
                 while True:
                     canvas.Clear()
-                    l = graphics.DrawText(canvas, font, pos, height_second_row, textColor, 'GOAL!!!')
+                    l = graphics.DrawText(canvas, anifont, pos, height_second_row, textColor, 'GOAL!!!')
                     pos -= 1
                     if (pos + l < 0):
                         pos = ROWS

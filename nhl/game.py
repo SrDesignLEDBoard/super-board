@@ -20,25 +20,6 @@ class Game:
         self.home_name = abbreviations[fix_name(game_info['htv'])]
         self.home_score = game_info['hts']
 
-        # Playoff-specific game information
-        if '03' in self.game_id[4:6]:
-            self.playoffs = True
-            self.playoff_round = self.game_id[6:8]
-            self.playoff_series_id = self.game_id[8:9]
-            self.playoff_series_game = self.game_id[9]
-        else:
-            self.playoffs = False
-
-    def get_scoreline(self, width: int) -> Dict[str, str]:
-        """Get current score in a dict with team names and score"""
-        score = {
-            "home": self.home_name,
-            "away": self.away_name,
-            "score": f"{self.away_score} - {self.home_score}",
-            "status": self.game_status
-        }
-        return score
-
     def get_matchup(self, width: int) -> Dict[str, str]:
         """Get full names of both teams"""
         matchup = {
@@ -58,18 +39,6 @@ class Game:
             tmp = self.game_clock.split(' ')
             matchup["time"], matchup["period"] = tmp[0], tmp[1]
         return matchup
-
-    def get_clock(self, width: int) -> str:
-        """Get game clock and status"""
-        clock = self.game_clock + ' (' + self.game_status + ')'
-        return clock
-
-    def is_scheduled_for(self, date: str) -> bool:
-        """True if this game is scheduled for the given date"""
-        if date.upper() in self.game_clock:
-            return True
-        else:
-            return False
 
     def is_scheduled_for_today(self) -> bool:
         """True if this game is scheduled for today"""
@@ -102,12 +71,6 @@ class Scores:
     def get_scores() -> List[Tuple[str, str]]:
         """Get a list of scores/games that are on-going
                 or planned for the day (in that order)"""
-        # format = [
-        #     {'home': 'NYR', 'away': 'PIT', 'stage': 'progress', 'status': 'LIVE', 'time': '17:22', 'period': '1st', 'score': '2 - 0'},
-        #     {'home': 'MTL', 'away': 'VAN', 'stage': 'final', 'status': 'FINAL', 'clock': 'TODAY', 'score': '2 - 6'},
-        #     {'home': 'WIN', 'away': 'CGY', 'stage': '', 'status': '5:00 PM', 'clock': 'TODAY'}
-        # ]
-
         try:
             data = utils.get_JSON(constants.NHL_API)
             games = []
