@@ -1,5 +1,12 @@
 def fix_name(team_name: str) -> str:
-    """Expand team names from the values in JSON"""
+    """Expand some team names from the values in JSON
+
+    Args:
+        team_name (str): Shortened name of the team
+
+    Returns:
+        str: Expanded name of the team (without city)
+    """
     if 'wings' in team_name:
         team_name = 'Red Wings'
     elif 'jackets' in team_name:
