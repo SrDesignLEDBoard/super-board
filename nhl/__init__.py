@@ -7,7 +7,7 @@ from PIL import Image, ImageOps
 from gpiozero import Button
 
 from .game import Scores
-from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
+from config import COLS, ROWS, BRIGHTNESS, GPIO_CONTROL
 
 def draw_board() -> int:
     """Draw components of NHL game

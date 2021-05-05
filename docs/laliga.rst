@@ -1,7 +1,7 @@
 .. LaLiga module
 
 LaLiga module
-==========
+=============
 
 __init__.py
 -----------

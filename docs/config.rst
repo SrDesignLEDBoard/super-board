@@ -1,7 +1,7 @@
 .. Config.py
 
 config.py
-=======
+=========
 
 .. automodule:: config
   :members:

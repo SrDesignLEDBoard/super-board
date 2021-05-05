@@ -7,12 +7,7 @@ from PIL import Image, ImageOps
 from gpiozero import Button
 
 from .game import Scores
-from config import COLS, ROWS, INTERVAL, BRIGHTNESS, GPIO_CONTROL
-
-
-# def draw_board():
-#     games = Scores.get_scores()
-#     print(games)
+from config import COLS, ROWS, BRIGHTNESS, GPIO_CONTROL
 
 def draw_board():
     """Draw components of LaLiga game
