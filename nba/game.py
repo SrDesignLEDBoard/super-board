@@ -30,7 +30,7 @@ class Game:
         self.home_name = game_info['hTeam']['triCode']
         self.home_score = game_info['hTeam']['score']
 
-    def get_matchup(self, width: int) -> Dict[str, str]:
+    def get_matchup(self) -> Dict[str, str]:
         """Get information of a single game.
 
         Returns:
@@ -88,7 +88,7 @@ class Scores:
                 if not game.is_favorite_match(config.NBA_FAVS):
                     continue
 
-                gs.append(game.get_matchup(config.COLS))
+                gs.append(game.get_matchup())
 
             return gs
         except Exception as e:

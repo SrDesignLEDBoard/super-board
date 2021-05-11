@@ -11,10 +11,29 @@ def main():
   try:
       print("Press CTRL-C to stop.")
       while True:
-          nhl.draw_board()
-          nba.draw_board()
-          mlb.draw_board()
-          laliga.draw_board()
+          try:
+            mlb.draw_board()
+          except Exception as e:
+              print("Error occured")
+              print(e)
+
+          try:
+            nhl.draw_board()
+          except Exception as e:
+              print("Error occured")
+              print(e)
+
+          try:
+            nba.draw_board()
+          except Exception as e:
+              print("Error occured")
+              print(e)
+
+          try:
+            laliga.draw_board()
+          except Exception as e:
+              print("Error occured")
+              print(e)
   except KeyboardInterrupt:
       sys.exit(0)
 

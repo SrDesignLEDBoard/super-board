@@ -104,7 +104,7 @@ class Scores:
 
                 game = Game(game_info, away_name, home_name)
 
-                gs.append(game.get_matchup(config.COLS)) 
+                gs.append(game.get_matchup()) 
 
             return gs
         except Exception as e:

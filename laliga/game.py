@@ -40,7 +40,7 @@ class Game:
         self.home_name = h_name
         self.home_score = game_info['competitions'][0]['competitors'][0]['score']
 
-    def get_matchup(self, width: int) -> Dict[str, str]:
+    def get_matchup(self) -> Dict[str, str]:
         """Get information of a single game.
 
         Returns:
@@ -90,7 +90,7 @@ class Scores:
 
                 game = Game(game_info, away_name, home_name)
 
-                gs.append(game.get_matchup(config.COLS))
+                gs.append(game.get_matchup())
 
             return gs
         except Exception as e:

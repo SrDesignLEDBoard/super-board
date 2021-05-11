@@ -22,7 +22,7 @@ MLB_FAVS = ['BOS']
 NBA_FAVS = ['BKN', 'DAL']
 """List[str]: List of abbreviations of favorite teams in NBA"""
 
-NHL_FAVS = ['PIT', 'EDM']
+NHL_FAVS = ['PHI', 'EDM']
 """List[str]: List of abbreviations of favorite teams in NHL"""
 
 LALIGA_FAVS = ['FCB', 'ATB']
