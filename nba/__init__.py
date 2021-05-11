@@ -9,8 +9,18 @@ from gpiozero import Button
 from .game import Scores
 from config import COLS, ROWS, BRIGHTNESS, GPIO_CONTROL
 
+
 def draw_board():
-    """Draw components of NBA game
+    """Draw components of NBA game.
+
+    Firstly, creates a canvas for the LED matrix using various configurations.
+    Requests games for the day for NBA and draws various components of the game such as team logos, scores, period, and time.
+
+    "SCORE!!!" animation is disabled by default. User can uncomment it if they want but because frequency of NBA updates, 
+    the animation will run every single time. (Recommended to keep it disabled)
+
+    If button is pressed during the execution, it will load the next game. If the game is the last one for the day in NBA, then it will
+    go to the next league.
 
     Returns:
         int: Return -1 if no favorite game.
@@ -66,7 +76,7 @@ def draw_board():
 
     while it < len(games):
         canvas.Clear()
-        
+
         score_len = 28
         if 'score' in games[it]:
             # Chagne score len if 2 digit score
@@ -74,8 +84,8 @@ def draw_board():
 
         # Get x coords for logos
         image_space = (COLS - score_len - 4) / 2
-        x_away = -ROWS + image_space -2
-        x_home = image_space + score_len +2
+        x_away = -ROWS + image_space - 2
+        x_home = image_space + score_len + 2
 
         # Get logos as thumbnails; home is flipped for right
         image_away = Image.open(f"logos/NBA/{games[it]['away']}_logo.png")
@@ -92,37 +102,37 @@ def draw_board():
             # Print score final or live
             score_len = len(games[it]['score'])*4
             graphics.DrawText(canvas, font,
-                                int((COLS - score_len) / 2),
-                                height_second_row, textColor, games[it]['score'])
+                              int((COLS - score_len) / 2),
+                              height_second_row, textColor, games[it]['score'])
             if games[it]['status_num'] == 2:
                 # If game is in progress, print period \
                 # and time left in the period
                 period_len = 8
                 time_len = len(games[it]['clock'])*4
                 graphics.DrawText(canvas, font,
-                                    int((COLS - period_len) / 2),
-                                    height_first_row, textColor,
-                                    'Q' + games[it]['period'])
+                                  int((COLS - period_len) / 2),
+                                  height_first_row, textColor,
+                                  'Q' + games[it]['period'])
                 graphics.DrawText(canvas, font,
-                                    int((COLS - time_len) / 2),
-                                    height_third_row, textColor,
-                                    games[it]['clock'])
+                                  int((COLS - time_len) / 2),
+                                  height_third_row, textColor,
+                                  games[it]['clock'])
             else:
                 graphics.DrawText(canvas, font,
-                                    int((COLS - 12) / 2),
-                                    height_first_row, textColor, "FIN")
+                                  int((COLS - 12) / 2),
+                                  height_first_row, textColor, "FIN")
         else:
             # If planned game, print @ and time
             status_len = len(games[it]['starttime'])*4
             graphics.DrawText(canvas, font,
-                                int((COLS - 8) / 2),
-                                height_first_row, textColor, "AT")
+                              int((COLS - 8) / 2),
+                              height_first_row, textColor, "AT")
             graphics.DrawText(canvas, font,
-                                int((COLS - status_len) / 2),
-                                height_second_row, textColor, games[it]['starttime'])
+                              int((COLS - status_len) / 2),
+                              height_second_row, textColor, games[it]['starttime'])
             graphics.DrawText(canvas, font,
-                                int((COLS - 8) / 2),
-                                height_third_row, textColor, 'ET')
+                              int((COLS - 8) / 2),
+                              height_third_row, textColor, 'ET')
 
         # Handle control button and wait
         is_button_pressed = button.wait_for_press(5)
@@ -141,7 +151,7 @@ def draw_board():
 
             # Check if new fixes
             if games[it]['away'] != games[it]['away'] and \
-                tmp[it]['home'] != tmp[it]['home']:
+                    tmp[it]['home'] != tmp[it]['home']:
                 it = 0
             # elif games[it]['status'] and games[it]['score'] != tmp[it]['score']:
             #     # check for score update

@@ -9,7 +9,10 @@ except ImportError:
 
 
 def get_date(delta: int) -> str:
-    """Build a date object with given day offset
+    """Build a date object with given day offset.
+
+    Function is necessary to check games for NHL since the API returns games for entire week.
+    Get the date as a string in a particular format used in JSON returned from NHL API.
 
     Args:
         delta (int): Offset
@@ -26,7 +29,10 @@ def get_date(delta: int) -> str:
 
 
 def get_JSON(URL: str) -> Dict:
-    """Request JSON from API server
+    """Request JSON from API server.
+
+    GET requests to URL provided to the function and return a python dict.
+    APIs like NHL have a wrapper so handles that as well.
 
     Args:
         URL (str): [description]
@@ -40,8 +46,6 @@ def get_JSON(URL: str) -> Dict:
         response = response.text.replace('loadScoreboard(', '')
         response = response.replace(')', '')
         response = json.loads(response)
-    # elif 'mlb' in URL or 'espn' in URL:
-    #     response = json.loads(response.text)
     else:
         response = json.loads(response.text)
     return response
