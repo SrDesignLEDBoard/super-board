@@ -1,16 +1,29 @@
-# matrix width and height
+"""Configurations for LEDScorebard program"""
+from typing import List
+
 COLS = 64
+"""int: Number of columnns in the LED matrix"""
+
 ROWS = 32
+"""int: Number of rows in the LED matrix"""
 
 GPIO_MAPPING = "adafruit-hat"
-GPIO_CONTROL = 25
-BRIGHTNESS = 60
+"""str: Type of GPIO mappings for LED matrix bonet"""
 
-INTERVAL = 10
-SCROLL = 5
+GPIO_CONTROL = 25
+"""int: GPIO for control button"""
+
+BRIGHTNESS = 60
+"""int: Brightness (1-100) for LEDs of the matrix"""
 
 MLB_FAVS = ['BOS']
-NBA_FAVS = ['BKN', 'DAL']
-NHL_FAVS = ['PIT', 'EDM']
-LALIGA_FAVS = ['FCB', 'ATB']
+"""List[str]: List of abbreviations of favorite teams in MLB"""
 
+NBA_FAVS = ['BKN', 'DAL']
+"""List[str]: List of abbreviations of favorite teams in NBA"""
+
+NHL_FAVS = ['PHI', 'EDM', 'BOS', 'WIN']
+"""List[str]: List of abbreviations of favorite teams in NHL"""
+
+LALIGA_FAVS = ['FCB', 'ATB']
+"""List[str]: List of abbreviations of favorite teams in La Liga"""

@@ -1,3 +1,6 @@
+"""Abbreviation information about MLB teams
+"""
+
 abbreviations = {
     "Diamondbacks": "ARI",
     "Braves":       "ATL",

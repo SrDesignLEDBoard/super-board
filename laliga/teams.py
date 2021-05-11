@@ -1,3 +1,6 @@
+"""Abbreviation information about NHL teams
+"""
+
 abbreviations_full = {
     "Alavés":          "ALV",
     "Athletic Bilbao": "ATB",
