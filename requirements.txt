@@ -4,7 +4,7 @@ configparser==5.0.2
 enum34==1.1.10
 futures==3.3.0
 gpiozero==1.5.1
-isort==5.7.0
+isort==5.11.4
 lazy-object-proxy==1.5.2
 mccabe==0.6.1
 Pillow==7.1.0
