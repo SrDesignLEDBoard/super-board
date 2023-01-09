@@ -9,7 +9,7 @@ lazy-object-proxy==1.5.2
 mccabe==0.6.1
 Pillow==7.1.0
 rgbmatrix==0.0.1
-singledispatch==3.4.0.3
+singledispatch==4.0.0
 six==1.15.0
 ujson==4.0.2
 wrapt==1.12.1
